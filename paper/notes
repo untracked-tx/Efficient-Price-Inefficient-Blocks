@@ -1,0 +1,287 @@
+Internal Research Blueprint: Blockspace Markets & Bitcoin Returns
+The Core Insight (What This Is Really About)
+The Big Idea: Bitcoin's blockchain is fundamentally a marketplace for transaction space. Every 10 minutes, there's exactly 4MB of space available (the product). Users bid via fees (the price) to get their transactions included. This creates a microeconomic system with:
+
+Supply constraints (fixed blocksize)
+Demand dynamics (user urgency)
+Inventory effects (HODLers not transacting)
+Revenue implications (miner economics)
+
+The Leap: The state of this blockspace market should predict Bitcoin's price movements because:
+
+High fees = high demand for Bitcoin usage = bullish signal
+Old coins moving = long-term holders selling = bearish signal
+Miner revenue mix changes = security budget shifts = structural effects
+
+You're essentially saying: "Forget Twitter sentiment and TA charts. The blockchain's internal economy tells you where price is headed."
+Research Architecture (Three Interconnected Studies)
+Part I: The Prediction Engine
+What we're doing: Building a factor model that uses yesterday's blockchain state to predict tomorrow's returns.
+The factors:
+
+HODL% (Illiquidity): What % of Bitcoin hasn't moved in 1+ years
+
+High = tight float, supply shock potential → expect positive coefficient
+Think of it as "available inventory" in a commodity market
+
+
+SOPR-lite (Profit-Taking): Ratio of value sold vs. what sellers originally paid
+
+
+
+1 = profits being realized → expect negative coefficient
+
+
+This captures "are people taking profits off the table?"
+
+
+3. **NVT (Valuation)**: Network value per transaction unit
+   - Traditional analog: P/E ratio
+   - Mechanism: High NVT → Overvaluation → Mean reversion
+
+
+How we test it:
+Daily process:
+1. Calculate 3 factors from yesterday's blockchain (t-1)
+2. Predict today's return (t)
+3. Use expanding window (start with 365 days, add 1 day each time)
+4. Never use future data in training
+5. Generate predictions for 2019-2024
+6. Calculate out-of-sample R², Information Coefficient, Sharpe ratio
+What we expect to find:
+
+OOS R² of 2-5% for daily, 5-15% for weekly (this would be HUGE in tradfi)
+HODL% positive coefficient (scarcity → price up)
+SOPR negative coefficient (profit-taking → price down)
+High NVT → Overvaluation → Mean reversionA simple long/short strategy that survives transaction costs
+
+Part II: The Elasticity Study
+What we're doing: Measuring how transaction demand responds to fee shocks. This is classic microeconomics applied to a new market.
+The experiment:
+
+When fees suddenly spike (say, from Ordinals inscription wave), how much does transaction count drop?
+How quickly does the market clear back to normal?
+Is demand more elastic when blocks are already full?
+
+How we measure it:
+For each fee shock:
+1. Identify the shock (>50% fee increase in <6 blocks)
+2. Measure demand response:
+   - Immediate (1-6 blocks out)
+   - Short-term (24 hours out)  
+   - Medium-term (72 hours out)
+3. Calculate elasticity: % change in TX count / % change in fees
+4. Measure half-life: how many blocks until fees return to baseline
+What we expect to find:
+
+Elasticity of -0.3 to -0.7 (30-70% demand drop for 100% fee increase)
+Half-life of 50-100 blocks (~8-16 hours)
+Stronger elasticity when blocks >95% full (people have alternatives)
+Asymmetry: demand drops fast on fee spikes but recovers slowly
+
+Part III: The Seasonality Map
+What we're doing: Documenting when it's cheapest/most expensive to transact.
+The analysis:
+For each hour × day combination:
+1. Calculate median fees (price)
+2. Calculate block fullness (congestion)
+3. Test stability across different eras
+4. Identify persistent patterns
+What we expect to find:
+
+Weekend discount (30-50% lower fees)
+US afternoon peak (2-6pm EST highest fees)
+Asian morning lull (2-6am EST lowest fees)
+Patterns breaking down as institutional adoption grows (important finding!)
+
+The Data Pipeline
+Raw Inputs Needed
+python# Daily blockchain metrics (Bitcoin Core + indexer)
+- All transactions with fees, inputs, outputs
+- Block timestamps, size, weight
+- UTXO set with ages and values
+- Miner revenue (subsidy + fees)
+
+# Price data
+- Hourly/daily Bitcoin prices (multiple exchanges)
+- Volume data for liquidity adjustments
+
+# Time coverage
+- Training: 2016-2022
+- Testing: 2023-2024
+- Special focus: 2024 ETF period
+Feature Construction
+python# HODL% (daily)
+hodl_pct = (
+    UTXOs with age >= 365 days / 
+    Total supply
+)
+
+# SOPR-lite (daily)
+sopr = (
+    Sum(spent_output_value * current_price) /
+    Sum(spent_output_value * price_when_created)
+)
+
+# Fee Share (daily)
+fee_share = (
+    Daily total fees /
+    (Daily total fees + Daily block subsidy)
+)
+
+# For elasticity (per block)
+median_fee_per_vbyte = median([tx.fee / tx.vsize for tx in block])
+tx_count = len(block.transactions)
+block_fullness = block.weight / MAX_WEIGHT
+Critical Technical Details
+Avoiding Look-Ahead Bias
+
+Use t-1 features to predict t returns (1-day lag minimum)
+For intraday: use only confirmed blocks (6+ confirmations)
+Price data: use exchange timestamps, not block timestamps
+Never use "realized" price for SOPR calculation (circular!)
+
+Handling Endogeneity
+The killer problem: everything affects everything else.
+
+Fees affect price BUT price affects fees
+HODLing affects price BUT price affects HODLing
+
+Solutions:
+
+Instrumental variables: Use hash rate shocks, difficulty adjustments
+Granger causality tests: Show temporal precedence
+Orthogonalization: Remove price momentum effect first, then test factors
+Event studies: Use exogenous shocks (regulatory news, exchange hacks)
+
+Robustness Battery
+python# Must survive ALL of these:
+1. Subsample stability (pre/post 2020, bull/bear markets)
+2. Factor construction variants (30/60/90-day HODL)
+3. Winsorization levels (1%, 2%, 5%)
+4. Different return horizons (1d, 3d, 7d, 30d)
+5. Alternative models (Ridge, LASSO, Random Forest)
+6. Transaction cost assumptions (5, 10, 20 bps)
+7. Excluding top 10% volume days
+8. Controlling for: momentum, volatility, volume, day-of-week
+Expected Outcomes & Their Implications
+Best Case Scenario
+
+Part I: OOS R² > 5% daily, strategy Sharpe > 1.5
+
+Implication: Institutional adoption, possible ETF strategy
+
+
+Part II: Clean -0.5 elasticity, 24-hour half-life
+
+Implication: Exchanges optimize batching, wallets add fee prediction
+
+
+Part III: Stable 40% weekend discount
+
+Implication: Trading desks shift settlement timing
+
+
+
+Base Case Scenario
+
+Part I: OOS R² ~2% daily, marginal Sharpe ~0.8
+
+Implication: Academic publication, one input among many for quants
+
+
+Part II: Noisy elasticity, state-dependent effects
+
+Implication: Theoretical interest, needs more work for production
+
+
+Part III: Patterns exist but weakening over time
+
+Implication: Documents market maturation
+
+
+
+Worst Case (Still Publishable)
+
+Part I: Factors work until 2021, then break
+
+Finding: "Institutional adoption killed on-chain signals"
+
+
+Part II: No stable elasticity
+
+Finding: "Blockspace demand is perfectly inelastic in short-run"
+
+
+Part III: No patterns
+
+Finding: "Bitcoin operates 24/7 globally with perfect efficiency"
+
+
+
+The Execution Timeline
+Week 1-2: Data Infrastructure
+
+Set up Bitcoin node with full transaction index
+Build extraction pipeline (SQL/Python)
+Validate against public sources (Glassnode, CoinMetrics)
+
+Week 3-4: Part I Development
+
+Calculate daily factors back to 2016
+Run expanding window regressions
+Generate out-of-sample predictions
+Build trading strategy simulator
+
+Week 5-6: Part II Analysis
+
+Identify fee shock events (minimum 50 events)
+Estimate elasticities with multiple specifications
+Test for state dependence and asymmetries
+Calculate confidence intervals via bootstrap
+
+Week 7: Part III & Integration
+
+Generate seasonality heatmaps
+Test structural breaks
+Write unified narrative connecting all parts
+
+Week 8: Robustness & Polish
+
+Run full robustness battery
+Create publication-quality figures
+Write executive summary
+Prepare replication package
+
+Key Risks & Mitigations
+Risk 1: Data Mining Accusation
+
+Mitigation: Pre-specify all tests, use multiple testing corrections, true out-of-sample test on 2025 data
+
+Risk 2: Factors Stop Working
+
+Mitigation: Frame as "regime change" finding, document the break precisely
+
+Risk 3: Endogeneity Critiques
+
+Mitigation: Lead with limitations, use multiple identification strategies, be humble about causality claims
+
+Risk 4: "Too Simple" Critique
+
+Mitigation: Simplicity is a feature - compare to complex ML models, show your 3 factors match or beat them
+
+The Secret Sauce
+What makes this special isn't just the factors - it's the economic coherence. You're not data mining; you're testing whether Bitcoin's internal microstructure contains price-relevant information. The elasticity study grounds it in economic theory. The seasonality provides immediate practical value.
+This is how you frame it:
+
+"We treat Bitcoin's blockchain as a observable microeconomic system and show that its state - captured by just three interpretable factors - contains significant predictive power for returns. Moreover, we estimate the first demand elasticities for blockspace and document persistent intraday patterns, providing both theoretical insights and practical tools for market participants."
+
+Success Metrics
+You know you've succeeded when:
+
+A quant fund emails asking for your daily factor updates
+An exchange cites your elasticity estimates in a fee algorithm update
+The paper gets 100+ citations in 2 years
+You can explain it to a tradfi PM in 2 minutes and they immediately get it
+
+This is a 3-month project that could define your research reputation. The key is maintaining the balance between academic rigor and practical applicability. Don't get lost in complexity - the beauty is in the simplicity of the core insight: blockspace market state predicts returns.

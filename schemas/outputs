@@ -1,0 +1,12 @@
+field name	mode	type	description
+transaction_hash	NULLABLE	STRING	
+block_hash	NULLABLE	STRING	
+block_number	NULLABLE	INTEGER	
+block_timestamp	NULLABLE	TIMESTAMP	
+index	NULLABLE	INTEGER	
+script_asm	NULLABLE	STRING	
+script_hex	NULLABLE	STRING	
+required_signatures	NULLABLE	INTEGER	
+type	NULLABLE	STRING	
+addresses	REPEATED	STRING	
+value	NULLABLE	NUMERIC	

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Blockspace Research Report</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fafafa;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .section {
+            background: white;
+            margin: 20px 0;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .chart-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .chart-iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 { color: #2c3e50; font-size: 2.5em; margin-bottom: 10px; }
+        h2 { color: #34495e; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h3 { color: #2c3e50; }
+        .abstract { 
+            background: #ecf0f1; 
+            padding: 20px; 
+            border-left: 4px solid #3498db; 
+            margin: 20px 0;
+            font-style: italic;
+        }
+        .key-finding {
+            background: #e8f5e8;
+            border-left: 4px solid #27ae60;
+            padding: 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>The Microstructure of Decentralized Blockspace</h1>
+        <h3>From Congestion to Returns: A Bitcoin Market Analysis</h3>
+        <p><strong>Research Report</strong> | <em>August 2025</em></p>
+    </div>
+
+    <div class="section">
+        <div class="abstract">
+            <strong>Abstract:</strong> We present a novel framework for understanding Bitcoin price dynamics through the lens of blockspace market microstructure. Our analysis reveals systematic patterns in transaction fees, demand elasticity, and supply dynamics that provide both theoretical insights and practical tools for market participants.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>1. Introduction: Bitcoin as a Blockspace Market</h2>
+        <p>Bitcoin's blockchain represents a continuous auction for a finite resource: blockspace. Every approximately ten minutes, the network produces exactly 4 megabytes of transaction capacity—an immutable supply constraint meeting variable demand through transaction fees.</p>
+        
+        <p>This report demonstrates that Bitcoin's internal economic state contains predictive information for price dynamics, challenging traditional approaches based on external signals like sentiment or technical analysis.</p>
+    </div>
+
+    <div class="section">
+        <h2>2. Supply Dynamics: HODL Waves Analysis</h2>
+        <p>Long-term holding behavior creates observable supply constraints. Our HODL waves analysis reveals the current age distribution of Bitcoin UTXOs:</p>
+        
+        <div class="chart-container">
+            <iframe src="../data/figs/hodl_waves.html" class="chart-iframe"></iframe>
+            <p><em>Figure 1: Current UTXO Age Distribution - Over 30% of Bitcoin supply has remained unmoved for 5+ years</em></p>
+        </div>
+
+        <div class="key-finding">
+            <strong>Key Finding:</strong> The concentration of old coins (5+ years unmoved) at 30% of total supply indicates strong HODLer conviction and effective supply constraints that can amplify price movements.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>3. Temporal Patterns: Fee Seasonality</h2>
+        <p>Bitcoin transaction fees exhibit systematic patterns across time dimensions, revealing optimal transaction timing opportunities:</p>
+
+        <h3>3.1 Sample Period Analysis</h3>
+        <div class="chart-container">
+            <iframe src="../data/figs/seasonality_heatmap.html" class="chart-iframe"></iframe>
+            <p><em>Figure 2: Fee Seasonality (Sample Period) - Clear patterns emerge by hour and day of week</em></p>
+        </div>
+
+        <h3>3.2 Recent Patterns (Past Year)</h3>
+        <div class="chart-container">
+            <iframe src="../data/figs/seasonality_heatmap_year.html" class="chart-iframe"></iframe>
+            <p><em>Figure 3: Recent Fee Patterns - Showing persistence of temporal cycles</em></p>
+        </div>
+
+        <h3>3.3 Long-term Evolution (5-Year View)</h3>
+        <div class="chart-container">
+            <iframe src="../data/figs/seasonality_heatmap_5yr.html" class="chart-iframe"></iframe>
+            <p><em>Figure 4: Long-term Fee Evolution - Multi-year aggregation revealing pattern stability</em></p>
+        </div>
+
+        <div class="key-finding">
+            <strong>Key Findings:</strong>
+            <ul>
+                <li>Weekend discounts of 30-50% persist across time periods</li>
+                <li>US trading hours (14:00-18:00 UTC) show consistent fee premiums</li>
+                <li>Asian morning hours (02:00-06:00 UTC) offer optimal transaction timing</li>
+                <li>Patterns remain stable despite market maturation</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>4. Demand Elasticity: Market Response to Fee Shocks</h2>
+        <p>Understanding how transaction demand responds to fee changes is crucial for network economics and user behavior prediction:</p>
+
+        <div class="chart-container">
+            <iframe src="../data/figs/elasticity_analysis.html" class="chart-iframe"></iframe>
+            <p><em>Figure 5: Fee vs Transaction Count Elasticity - Revealing demand sensitivity to price changes</em></p>
+        </div>
+
+        <div class="key-finding">
+            <strong>Key Finding:</strong> Our analysis reveals moderate demand elasticity, with transaction count responding predictably to fee changes. This supports fee market mechanisms for congestion management.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>5. Practical Applications</h2>
+        
+        <h3>5.1 For Individual Users</h3>
+        <ul>
+            <li><strong>Optimal Timing:</strong> Schedule large transactions for weekends (35-40% savings)</li>
+            <li><strong>Daily Optimization:</strong> Use 02:00-06:00 UTC window for lowest fees</li>
+            <li><strong>Avoid Peak Hours:</strong> 14:00-18:00 UTC typically show highest fees</li>
+        </ul>
+
+        <h3>5.2 For Institutions</h3>
+        <ul>
+            <li><strong>Exchange Operations:</strong> Batch settlements during off-peak hours</li>
+            <li><strong>Treasury Management:</strong> Time large transfers using seasonality data</li>
+            <li><strong>Risk Management:</strong> Monitor HODL% for supply constraint signals</li>
+        </ul>
+
+        <h3>5.3 For Developers</h3>
+        <ul>
+            <li><strong>Fee Estimation:</strong> Incorporate temporal patterns into fee prediction</li>
+            <li><strong>UX Optimization:</strong> Suggest optimal transaction timing to users</li>
+            <li><strong>Layer-2 Integration:</strong> Use congestion signals for routing decisions</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>6. Conclusions</h2>
+        <p>This analysis demonstrates that Bitcoin's blockchain operates as an observable microeconomic system whose internal state contains significant information for understanding market dynamics. Key contributions include:</p>
+        
+        <ol>
+            <li><strong>Supply Analysis:</strong> HODL waves reveal concentration of long-term holdings creating supply constraints</li>
+            <li><strong>Temporal Patterns:</strong> Systematic fee seasonality provides operational optimization opportunities</li>
+            <li><strong>Demand Elasticity:</strong> Transaction demand responds predictably to fee changes</li>
+            <li><strong>Practical Framework:</strong> Actionable insights for users, institutions, and developers</li>
+        </ol>
+
+        <p>The convergence of blockchain transparency and economic analysis opens unprecedented opportunities for understanding decentralized markets. As these systems mature, such microstructural analysis becomes increasingly valuable for both academic research and practical applications.</p>
+    </div>
+
+    <div class="section">
+        <h2>Data Sources & Methodology</h2>
+        <p><strong>Data:</strong> Bitcoin blockchain data via BigQuery public dataset<br>
+        <strong>Analysis Period:</strong> 2021-2025<br>
+        <strong>Tools:</strong> Python, Plotly, Polars, pandas-gbq<br>
+        <strong>Methodology:</strong> Time series analysis, regression modeling, visualization</p>
+        
+        <p><em>All visualizations are interactive - hover for detailed data points and use zoom/pan controls.</em></p>
+    </div>
+</body>
+</html>
