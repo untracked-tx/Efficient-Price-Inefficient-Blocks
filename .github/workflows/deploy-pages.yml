@@ -3,7 +3,8 @@ name: Deploy GitHub Pages
 on:
   push:
     branches:
-      - gh-pages
+      - main
+      - master
   workflow_dispatch:
 
 permissions:
@@ -41,12 +42,13 @@ jobs:
 
       - name: Render paper
         run: |
-          quarto render paper/paper.qmd
-
+          # Render the entire Quarto website
+          quarto render
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: ./docs
 
   deploy:
     needs: build

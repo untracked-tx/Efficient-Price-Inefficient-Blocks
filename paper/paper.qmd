@@ -50,7 +50,7 @@ For the blockchain analysis:
 
 ### 3.1 The Bottom Line — Bitcoin Weekday Effects Don't Exist (Interactive Dashboard)
 <div class="viz-container" style="max-width:1100px">
-  <iframe src="../data/figs/btc_weekday_lead_dashboard.html"
+  <iframe src="../docs/btc_weekday_lead_dashboard.html"
           width="100%" height="720" frameborder="0" allowfullscreen></iframe>
 </div>
 <p class="fig-caption" style="margin-top:0.5rem">
@@ -64,7 +64,7 @@ Figure ES. Play with this dashboard to see for yourself: weekday patterns in Bit
 
 ### 3.2 Is Monday Special? Rolling Analysis Shows: Nope
 <div class="viz-container" style="max-width:1100px">
-  <iframe src="../data/figs/rolling_monday_diff.html" width="100%" height="520" frameborder="0" allowfullscreen title="Rolling Monday minus Others mean difference"></iframe>
+  <iframe src="../docs/rolling_monday_diff.html" width="100%" height="520" frameborder="0" allowfullscreen title="Rolling Monday minus Others mean difference"></iframe>
 </div>
 <p class="fig-caption" style="margin-top:0.5rem">
 This chart tracks whether Monday returns are different from other days over rolling windows. The gray bands show our confidence—when they include zero (the dashed line), there's no real difference.
@@ -75,12 +75,12 @@ This chart tracks whether Monday returns are different from other days over roll
 ::: {.panel-tabset}
 ### Regression Results
 <div class="viz-container" style="max-width:950px">
-  <iframe src="../data/figs/btc_regression_coeffs_interactive.html" width="100%" height="540" frameborder="0" allowfullscreen></iframe>
+  <iframe src="../docs/btc_regression_coeffs_interactive.html" width="100%" height="540" frameborder="0" allowfullscreen></iframe>
 </div>
 
 ### Global Tests
 <div class="viz-container" style="max-width:950px">
-  <iframe src="../data/figs/btc_anova_summary_interactive.html" width="100%" height="540" frameborder="0" allowfullscreen></iframe>
+  <iframe src="../docs/btc_anova_summary_interactive.html" width="100%" height="540" frameborder="0" allowfullscreen></iframe>
 </div>
 :::
 
@@ -96,8 +96,8 @@ Figure 2. Different statistical tests all saying the same thing: weekdays don't 
 :::
 
 **Download the data:**  
-- [Regression coefficients (CSV)](../data/figs/btc_regression_coeffs_table.csv)  
-- [Statistical test results (CSV)](../data/figs/btc_anova_summary_table.csv)
+- [Regression coefficients (CSV)](../docs/btc_regression_coeffs_table.csv)  
+- [Statistical test results (CSV)](../docs/btc_anova_summary_table.csv)
 
 ## 4. The Real Discovery: People Waste Money on Transaction Fees
 
@@ -105,19 +105,19 @@ Now here's where it gets interesting. While Bitcoin's price is efficiently rando
 
 ### 4.1 The Damage: How Much Money Gets Wasted
 <div class="viz-container" style="max-width:900px">
-  <iframe src="../data/figs/overpay_totals_windows.html" width="100%" height="240" frameborder="0" allowfullscreen title="Fee Overpayment Totals"></iframe>
+  <iframe src="../docs/overpay_totals_windows.html" width="100%" height="240" frameborder="0" allowfullscreen title="Fee Overpayment Totals"></iframe>
 </div>
 <p class="fig-caption" style="margin-top:0.5rem">
 Total Bitcoin wasted by users who paid at least 2× more than necessary for their transactions. This is real money down the drain.
 </p>
 
 <div class="viz-container" style="max-width:1200px;margin-top:0.75rem">
-  <iframe src="../data/figs/bitcoin-bus-interactive.html" width="100%" height="800" frameborder="0" allowfullscreen title="Bitcoin Bus Stop Interactive"></iframe>
+  <iframe src="../docs/bitcoin-bus-interactive.html" width="100%" height="800" frameborder="0" allowfullscreen title="Bitcoin Bus Stop Interactive"></iframe>
 </div>
 
 ### 4.2 Who's Overpaying and When?
 <div class="viz-container" style="max-width:1400px; overflow: visible;">
-  <iframe src="../data/figs/user_segment_3d.html" width="100%" height="1500" frameborder="0" allowfullscreen title="User Segment Analysis"></iframe>
+  <iframe src="../docs/user_segment_3d.html" width="100%" height="1500" frameborder="0" allowfullscreen title="User Segment Analysis"></iframe>
 </div>
 <p class="fig-caption" style="margin-top:0.5rem">
 Different types of users overpay at different times. This 3D view shows when and how much each group wastes.
@@ -125,18 +125,18 @@ Different types of users overpay at different times. This 3D view shows when and
 
 ### 4.3 The Network Gets Predictably Busy
 <div class="viz-container">
-  <iframe src="../data/figs/mempool_heatmap.html" width="100%" height="520" frameborder="0" allowfullscreen></iframe>
+  <iframe src="../docs/mempool_heatmap.html" width="100%" height="520" frameborder="0" allowfullscreen></iframe>
 </div>
 <div class="viz-container">
-  <iframe src="../data/figs/seasonality_heatmap_year.html" width="100%" height="520" frameborder="0" allowfullscreen></iframe>
+  <iframe src="../docs/seasonality_heatmap_year.html" width="100%" height="520" frameborder="0" allowfullscreen></iframe>
 </div>
 <div class="viz-container">
-  <iframe src="../data/figs/seasonality_heatmap_5yr.html" width="100%" height="520" frameborder="0" allowfullscreen></iframe>
+  <iframe src="../docs/seasonality_heatmap_5yr.html" width="100%" height="520" frameborder="0" allowfullscreen></iframe>
 </div>
 
 ### 4.4 When People Overpay: Clear Patterns Emerge
 <div class="viz-container">
-  <iframe src="../data/figs/fee_overpayment_patterns_5yr_interactive.html" width="100%" height="1200" frameborder="0" allowfullscreen></iframe>
+  <iframe src="../docs/fee_overpayment_patterns_5yr_interactive.html" width="100%" height="1200" frameborder="0" allowfullscreen></iframe>
 </div>
 
 ::: callout-interpretation
@@ -145,7 +145,7 @@ Different types of users overpay at different times. This 3D view shows when and
 
 ### 4.5 The Perfect Storm: Weekends + Rush Hours = Maximum Overpayment
 <div class="viz-container" style="max-width:1100px">
-  <iframe src="../data/figs/interaction_heatmaps.html" width="100%" height="820" frameborder="0" allowfullscreen title="Interaction Heatmaps"></iframe>
+  <iframe src="../docs/interaction_heatmaps.html" width="100%" height="820" frameborder="0" allowfullscreen title="Interaction Heatmaps"></iframe>
 </div>
 
 ::: callout-interpretation
@@ -156,14 +156,14 @@ Different types of users overpay at different times. This 3D view shows when and
 
 ### 5.1 Putting It All Together: What Drives Overpayment?
 <div class="viz-container" style="max-width:1100px">
-  <iframe src="../data/figs/overpay_interaction_regression.html" width="100%" height="720" frameborder="0" allowfullscreen title="Joint Regression Analysis"></iframe>
+  <iframe src="../docs/overpay_interaction_regression.html" width="100%" height="720" frameborder="0" allowfullscreen title="Joint Regression Analysis"></iframe>
 </div>
 <p class="fig-caption" style="margin-top:0.5rem">
 This regression analysis proves that block fullness, time of day, and weekends all independently contribute to fee overpayment. The interactions between these factors make the effect even stronger.
 </p>
 <p style="margin-top:1em;font-size:1.05em">
-  <a href="../data/figs/overpay_interaction_regression_table.csv" target="_blank">Download coefficients (CSV)</a> ·
-  <a href="../data/figs/overpay_interaction_regression.html" target="_blank">Full regression report (HTML)</a>
+  <a href="../docs/overpay_interaction_regression_table.csv" target="_blank">Download coefficients (CSV)</a> ·
+  <a href="../docs/overpay_interaction_regression.html" target="_blank">Full regression report (HTML)</a>
 </p>
 
 ## 6. What Could Go Wrong With Our Analysis?
@@ -204,20 +204,20 @@ This regression analysis proves that block fullness, time of day, and weekends a
 
 ### A. Extra Price Analysis
 <div class="viz-container">
-  <iframe src="../data/figs/heatmap_month_weekday_returns.html" width="100%" height="520" frameborder="0" allowfullscreen></iframe>
+  <iframe src="../docs/heatmap_month_weekday_returns.html" width="100%" height="520" frameborder="0" allowfullscreen></iframe>
 </div>
 <p class="fig-caption">Monthly patterns show that any weekday effects drift and disappear over time—more evidence that you can't trade on them.</p>
 
 ### B. The 3D View of Overpayment
 <div class="viz-container" style="max-width:1100px">
-  <iframe src="../data/figs/3d_surface_overpayment.html" width="100%" height="720" frameborder="0" allowfullscreen title="3D Surface"></iframe>
+  <iframe src="../docs/3d_surface_overpayment.html" width="100%" height="720" frameborder="0" allowfullscreen title="3D Surface"></iframe>
 </div>
 <p class="fig-caption" style="margin-top:0.5rem">
 A 3D surface showing how overpayment changes with block fullness and time of day. The peaks show when people waste the most money.
 </p>
 
 <div class="viz-container" style="max-width:1100px">
-  <iframe src="../data/figs/3d_interactive_explore.html" width="100%" height="720" frameborder="0" allowfullscreen title="3D Interactive Explorer"></iframe>
+  <iframe src="../docs/3d_interactive_explore.html" width="100%" height="720" frameborder="0" allowfullscreen title="3D Interactive Explorer"></iframe>
 </div>
 <p class="fig-caption" style="margin-top:0.5rem">
 Explore the data yourself: each dot represents a time period, with size showing activity and color showing wasted Bitcoin.
@@ -225,7 +225,7 @@ Explore the data yourself: each dot represents a time period, with size showing 
 
 ### C. Get the Raw Data
 - <a href="../data/raw/overpay_joint_fullness_hour_daytype_365d.csv" target="_blank">Download complete dataset (CSV)</a>
-- <a href="../data/figs/overpay_interaction_regression_table.csv" target="_blank">Regression coefficients (CSV)</a>
+- <a href="../docs/overpay_interaction_regression_table.csv" target="_blank">Regression coefficients (CSV)</a>
 
 ### D. The Math (For Those Who Care)
 - Return calculation: r_t = ln(C_t/C_{t−1}) — natural log of price ratios

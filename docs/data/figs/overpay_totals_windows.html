@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Overpayment Totals (Cards)</title>
+    <style>
+/* ---------- KPI CARDS: polished, responsive, dark-mode friendly ---------- */
+:root {
+  --kpi-bg: #ffffff;
+  --kpi-fg: #171717;
+  --kpi-muted: #6b7280;
+  --kpi-ring: #e5e7eb;
+  --kpi-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 6px 20px rgba(0,0,0,0.06);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --kpi-bg: #0f1115;
+    --kpi-fg: #e5e7eb;
+    --kpi-muted: #9aa1ad;
+    --kpi-ring: #22252c;
+    --kpi-shadow: 0 1px 2px rgba(0,0,0,0.35), 0 14px 30px rgba(0,0,0,0.25);
+  }
+}
+
+.kpi-wrap {
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  color: var(--kpi-fg);
+  background: transparent;
+  margin: 0;
+}
+
+.kpi-header {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight: 700;
+  font-size: 1.025rem;
+  margin: 2px 2px 14px 2px;
+  line-height: 1.2;
+}
+
+.kpi-header svg {
+  width: 18px; height: 18px; opacity: .75;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  align-items: stretch;
+}
+
+.kpi-card {
+  position: relative;
+  border-radius: 14px;
+  background: var(--kpi-bg);
+  border: 1px solid var(--kpi-ring);
+  padding: 14px 16px 16px 16px;
+  box-shadow: var(--kpi-shadow);
+  overflow: hidden;
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  isolation: isolate;
+}
+
+.kpi-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(0,0,0,0.00));
+  pointer-events: none;
+  z-index: 0;
+}
+
+.kpi-card::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 6px;
+  background: linear-gradient(90deg, rgba(91,141,239,.95), rgba(91,141,239,.35));
+  z-index: 1;
+}
+
+.kpi-card[data-window="1y"]::after {
+  background: linear-gradient(90deg, rgba(46,197,182,.95), rgba(46,197,182,.35));
+}
+.kpi-card[data-window="3y"]::after,
+.kpi-card[data-window="1095d"]::after {
+  background: linear-gradient(90deg, rgba(245,158,11,.95), rgba(245,158,11,.35));
+}
+.kpi-card[data-window="365d"]::after {
+  background: linear-gradient(90deg, rgba(46,197,182,.95), rgba(46,197,182,.35));
+}
+.kpi-card[data-window="180d"]::after {
+  background: linear-gradient(90deg, rgba(91,141,239,.95), rgba(91,141,239,.35));
+}
+
+.kpi-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08), 0 18px 40px rgba(0,0,0,0.10);
+  border-color: rgba(125, 125, 200, .35);
+}
+
+.kpi-card__head {
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  z-index: 2;
+}
+
+.kpi-card__title {
+  font-size: .95rem;
+  color: var(--kpi-muted);
+  font-weight: 600;
+  letter-spacing: .2px;
+}
+
+.kpi-pill {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: .84rem;
+  font-weight: 700;
+  border-radius: 999px;
+  background: rgba(91,141,239,.12);
+  color: #5B8DEF;
+  border: 1px solid rgba(91,141,239,.25);
+  white-space: nowrap;
+}
+/* Pill color variants scoped by card accent */
+.kpi-card[data-window="1y"] .kpi-pill,
+.kpi-card[data-window="365d"] .kpi-pill {
+  background: rgba(46,197,182,.12);
+  color: #2EC5B6;
+  border-color: rgba(46,197,182,.25);
+}
+.kpi-card[data-window="3y"] .kpi-pill,
+.kpi-card[data-window="1095d"] .kpi-pill {
+  background: rgba(245,158,11,.14);
+  color: #F59E0B;
+  border-color: rgba(245,158,11,.30);
+}
+
+.kpi-card__value {
+  margin-top: 2px;
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: .2px;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.kpi-card__sub {
+  margin-top: 6px;
+  color: var(--kpi-muted);
+  font-size: .90rem;
+}
+
+.kpi-foot {
+  margin-top: 10px;
+  color: var(--kpi-muted);
+  font-size: .90rem;
+}
+    </style>
+  </head>
+  <body>
+    <div class="kpi-wrap">
+      <div class="kpi-header" title="Total fee amount paid by transactions classified as 'overpayment' (fee-rate ≥ 2× block median).">
+        <!-- Inline SVG icon -->
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2a1 1 0 0 1 .894.553l1.861 3.772 4.165.606a1 1 0 0 1 .554 1.706l-3.013 2.938.711 4.144a1 1 0 0 1-1.451 1.054L12 15.9l-3.721 1.973a1 1 0 0 1-1.451-1.054l.711-4.144-3.013-2.938a1 1 0 0 1 .554-1.706l4.165-.606L11.106 2.553A1 1 0 0 1 12 2z"/>
+        </svg>
+        <div>Total Fee Overpayment (≥ 2× block median) — anchored at 2025-08-01</div>
+      </div>
+      <div class="kpi-grid">
+        
+        <div class="kpi-card" data-window="6m">
+          <div class="kpi-card__head">
+            <div class="kpi-card__title">Last 6 Months</div>
+            <div class="kpi-pill" title="Share of transactions classified as overpayment (≥ 2× block median fee-rate)">13.5% overpay share</div>
+          </div>
+          <div class="kpi-card__value">392.393 BTC</div>
+          <div class="kpi-card__sub">overpay txs: 9,705,584 of 71,680,657 (13.5%)</div>
+        </div>
+        
+        <div class="kpi-card" data-window="1y">
+          <div class="kpi-card__head">
+            <div class="kpi-card__title">Last 1 Year</div>
+            <div class="kpi-pill" title="Share of transactions classified as overpayment (≥ 2× block median fee-rate)">11.1% overpay share</div>
+          </div>
+          <div class="kpi-card__value">1,154.699 BTC</div>
+          <div class="kpi-card__sub">overpay txs: 18,830,382 of 168,929,469 (11.1%)</div>
+        </div>
+        
+        <div class="kpi-card" data-window="3y">
+          <div class="kpi-card__head">
+            <div class="kpi-card__title">Last 3 Years</div>
+            <div class="kpi-pill" title="Share of transactions classified as overpayment (≥ 2× block median fee-rate)">10.3% overpay share</div>
+          </div>
+          <div class="kpi-card__value">9,779.121 BTC</div>
+          <div class="kpi-card__sub">overpay txs: 48,133,074 of 468,199,701 (10.3%)</div>
+        </div>
+        
+      </div>
+      <div class="kpi-foot">Definition: a transaction is counted as overpayment if its fee-rate ≥ 2× the block median fee-rate (sat/byte). Windows shown as available.</div>
+    </div>
+  </body>
+</html>
+    

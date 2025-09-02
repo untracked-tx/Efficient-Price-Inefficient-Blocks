@@ -24,17 +24,50 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="paper_files/libs/clipboard/clipboard.min.js"></script>
-<script src="paper_files/libs/quarto-html/quarto.js" type="module"></script>
-<script src="paper_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="paper_files/libs/quarto-html/popper.min.js"></script>
-<script src="paper_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="paper_files/libs/quarto-html/anchor.min.js"></script>
-<link href="paper_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="paper_files/libs/quarto-html/quarto-syntax-highlighting-753ac9db961c304346e53d05736b8c8a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="paper_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="paper_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="paper_files/libs/bootstrap/bootstrap-a26bb90adfb20f6c823145aee0b28b76.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-753ac9db961c304346e53d05736b8c8a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-948a2d2aa7d2d005050da13af83cb733.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
 <style>html{ scroll-behavior: smooth; }</style>
 <style>
 
@@ -54,16 +87,47 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<link rel="stylesheet" href="styles.scss">
+<link rel="stylesheet" href="paper/styles.scss">
 </head>
 
-<body class="quarto-light">
+<body class="nav-fixed quarto-light">
 
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Efficient Price, Inefficient Blocks</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./paper/paper.html"> 
+<span class="menu-text">Paper</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page">
       <h1 class="title">Efficient Price, Inefficient Blocks</h1>
-            <p class="subtitle lead">Why Bitcoin’s Price Has No Weekly Pattern, But Its Users Keep Overpaying for Transactions</p>
+            <p class="subtitle lead">Research on Bitcoin Price Patterns and Transaction Fee Inefficiencies</p>
                       </div>
   </div>
     
@@ -82,297 +146,45 @@ ul.task-list li input[type="checkbox"] {
     </div>
     
   
-  </header><div id="quarto-content" class="page-columns page-rows-contents page-layout-full">
-
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
 <main class="content quarto-banner-title-block column-page" id="quarto-document-content">
 
 
 
 
 
-<section id="abstract" class="level2">
-<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
-<div class="abstract">
-<p><strong>The Big Picture:</strong> We tested whether Bitcoin returns follow predictable weekly patterns (like stocks’ famous “Monday effect”). Using 10+ years of data, we found no reliable day-of-week patterns for trading. However, we discovered something more interesting: Bitcoin users consistently overpay for transactions during predictable times—weekends and morning hours—wasting millions of dollars in unnecessary fees. This creates real opportunities for cost savings, and begs the question of what todays congestion can tell us about tomorows price, particularly when users are significantly overpaying.</p>
-</div>
+<section id="welcome" class="level2">
+<h2 class="anchored" data-anchor-id="welcome">Welcome</h2>
+<p>This research explores whether Bitcoin exhibits predictable price patterns like traditional markets, and uncovers significant inefficiencies in how users pay transaction fees.</p>
 </section>
-<section id="introduction-what-were-looking-for" class="level2">
-<h2 class="anchored" data-anchor-id="introduction-what-were-looking-for">1. Introduction: What We’re Looking For</h2>
-<p>Everyone wants to find patterns in Bitcoin prices. The stock market has its “Monday effect” (where prices supposedly drop on Mondays), so we wondered: does Bitcoin have something similar?</p>
-<p>We tested Bitcoin’s daily returns across different time windows to see if certain days consistently perform better or worse. We used several statistical tests (think of them as different microscopes looking at the same data) including ANOVA (which compares averages across groups) and OLS regression (which measures relationships between variables).</p>
-<p><strong>Spoiler alert:</strong> The price patterns aren’t there. But we found something better—predictable inefficiencies in how people use the Bitcoin network that cost real money.</p>
-</section>
-<section id="how-we-did-this-the-simple-version" class="level2">
-<h2 class="anchored" data-anchor-id="how-we-did-this-the-simple-version">2. How We Did This (The Simple Version)</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Our Toolkit:</strong><br>
-- <strong>Daily returns</strong>: We calculate how much Bitcoin’s price changes each day (as a percentage) - <strong>Statistical tests</strong>: We use ANOVA (compares weekday averages) and Kruskal-Wallis (a backup test that doesn’t assume normal distributions) - <strong>OLS regression</strong>: A method that measures if Monday really is different from other days, using “dummy variables” (just yes/no flags for each weekday) - <strong>Robust standard errors</strong>: Fancy error bars that account for Bitcoin’s wild volatility - <strong>Time windows</strong>: We check patterns over 6 months, 1 year, 2 years, 5 years, and all available data</p>
-<p>For the blockchain analysis: - <strong>Overpayment ratio (OPR)</strong>: How much extra someone paid compared to what they needed to - <strong>Block fullness</strong>: How crowded the Bitcoin “bus” is (more on this later) - <strong>Clearing price</strong>: The minimum fee that would have gotten your transaction through</p>
-</div>
-</div>
-</section>
-<section id="the-price-story-no-magic-trading-days" class="level2">
-<h2 class="anchored" data-anchor-id="the-price-story-no-magic-trading-days">3. The Price Story: No Magic Trading Days</h2>
-<section id="the-bottom-line-bitcoin-weekday-effects-dont-exist-interactive-dashboard" class="level3">
-<h3 class="anchored" data-anchor-id="the-bottom-line-bitcoin-weekday-effects-dont-exist-interactive-dashboard">3.1 The Bottom Line — Bitcoin Weekday Effects Don’t Exist (Interactive Dashboard)</h3>
-<div class="viz-container" style="max-width:1100px">
-<p><iframe src="../data/figs/btc_weekday_lead_dashboard.html" width="100%" height="720" frameborder="0" allowfullscreen=""></iframe></p>
-</div>
-<p class="fig-caption" style="margin-top:0.5rem">
-Figure ES. Play with this dashboard to see for yourself: weekday patterns in Bitcoin are weak and unstable. Use the timeframe selector to explore different periods.
-</p>
-<p><strong>What this shows:</strong> - Weekday effects are tiny and keep changing - Statistical tests mostly say “no significant difference” (high p-values mean no pattern) - The “Monday effect” comes and goes—not something you can trade on</p>
-</section>
-<section id="is-monday-special-rolling-analysis-shows-nope" class="level3">
-<h3 class="anchored" data-anchor-id="is-monday-special-rolling-analysis-shows-nope">3.2 Is Monday Special? Rolling Analysis Shows: Nope</h3>
-<div class="viz-container" style="max-width:1100px">
-<p><iframe src="../data/figs/rolling_monday_diff.html" width="100%" height="520" frameborder="0" allowfullscreen="" title="Rolling Monday minus Others mean difference"></iframe></p>
-</div>
-<p class="fig-caption" style="margin-top:0.5rem">
-This chart tracks whether Monday returns are different from other days over rolling windows. The gray bands show our confidence—when they include zero (the dashed line), there’s no real difference.
-</p>
-</section>
-<section id="the-statistical-evidence-for-those-who-like-numbers" class="level3">
-<h3 class="anchored" data-anchor-id="the-statistical-evidence-for-those-who-like-numbers">3.3 The Statistical Evidence (For Those Who Like Numbers)</h3>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Regression Results</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Global Tests</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div class="viz-container" style="max-width:950px">
-<p><iframe src="../data/figs/btc_regression_coeffs_interactive.html" width="100%" height="540" frameborder="0" allowfullscreen=""></iframe></p>
-</div>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div class="viz-container" style="max-width:950px">
-<p><iframe src="../data/figs/btc_anova_summary_interactive.html" width="100%" height="540" frameborder="0" allowfullscreen=""></iframe></p>
-</div>
-</div>
-</div>
-</div>
-<p class="fig-caption" style="margin-top:0.5rem">
-Figure 1. How much each weekday differs from Monday (in percentage points). The error bars show our uncertainty—notice how they all overlap with zero.
-</p>
-<p class="fig-caption">
-Figure 2. Different statistical tests all saying the same thing: weekdays don’t matter for Bitcoin returns.
-</p>
-<div class="callout-interpretation">
-<p><strong>Translation:</strong> You can’t reliably make money by trading Bitcoin on specific weekdays. Any patterns you see are probably just random noise that won’t repeat.</p>
-</div>
-<p><strong>Download the data:</strong><br>
-- <a href="../data/figs/btc_regression_coeffs_table.csv">Regression coefficients (CSV)</a><br>
-- <a href="../data/figs/btc_anova_summary_table.csv">Statistical test results (CSV)</a></p>
-</section>
-</section>
-<section id="the-real-discovery-people-waste-money-on-transaction-fees" class="level2">
-<h2 class="anchored" data-anchor-id="the-real-discovery-people-waste-money-on-transaction-fees">4. The Real Discovery: People Waste Money on Transaction Fees</h2>
-<p>Now here’s where it gets interesting. While Bitcoin’s price is efficiently random, the way people use Bitcoin is predictably inefficient.</p>
-<section id="the-damage-how-much-money-gets-wasted" class="level3">
-<h3 class="anchored" data-anchor-id="the-damage-how-much-money-gets-wasted">4.1 The Damage: How Much Money Gets Wasted</h3>
-<div class="viz-container" style="max-width:900px">
-<p><iframe src="../data/figs/overpay_totals_windows.html" width="100%" height="240" frameborder="0" allowfullscreen="" title="Fee Overpayment Totals"></iframe></p>
-</div>
-<p class="fig-caption" style="margin-top:0.5rem">
-Total Bitcoin wasted by users who paid at least 2× more than necessary for their transactions. This is real money down the drain.
-</p>
-<div class="viz-container" style="max-width:1200px;margin-top:0.75rem">
-<p><iframe src="../data/figs/bitcoin-bus-interactive.html" width="100%" height="800" frameborder="0" allowfullscreen="" title="Bitcoin Bus Stop Interactive"></iframe></p>
-</div>
-</section>
-<section id="whos-overpaying-and-when" class="level3">
-<h3 class="anchored" data-anchor-id="whos-overpaying-and-when">4.2 Who’s Overpaying and When?</h3>
-<div class="viz-container" style="max-width:1400px; overflow: visible;">
-<p><iframe src="../data/figs/user_segment_3d.html" width="100%" height="1500" frameborder="0" allowfullscreen="" title="User Segment Analysis"></iframe></p>
-</div>
-<p class="fig-caption" style="margin-top:0.5rem">
-Different types of users overpay at different times. This 3D view shows when and how much each group wastes.
-</p>
-</section>
-<section id="the-network-gets-predictably-busy" class="level3">
-<h3 class="anchored" data-anchor-id="the-network-gets-predictably-busy">4.3 The Network Gets Predictably Busy</h3>
-<div class="viz-container">
-<p><iframe src="../data/figs/mempool_heatmap.html" width="100%" height="520" frameborder="0" allowfullscreen=""></iframe></p>
-</div>
-<div class="viz-container">
-<p><iframe src="../data/figs/seasonality_heatmap_year.html" width="100%" height="520" frameborder="0" allowfullscreen=""></iframe></p>
-</div>
-<div class="viz-container">
-<p><iframe src="../data/figs/seasonality_heatmap_5yr.html" width="100%" height="520" frameborder="0" allowfullscreen=""></iframe></p>
-</div>
-</section>
-<section id="when-people-overpay-clear-patterns-emerge" class="level3">
-<h3 class="anchored" data-anchor-id="when-people-overpay-clear-patterns-emerge">4.4 When People Overpay: Clear Patterns Emerge</h3>
-<div class="viz-container">
-<p><iframe src="../data/figs/fee_overpayment_patterns_5yr_interactive.html" width="100%" height="1200" frameborder="0" allowfullscreen=""></iframe></p>
-</div>
-<div class="callout-interpretation">
-<p><strong>What this means:</strong> People consistently overpay for Bitcoin transactions on weekends and during morning hours (UTC). Unlike price patterns, this is real and persistent—you can save money by timing your transactions better.</p>
-</div>
-</section>
-<section id="the-perfect-storm-weekends-rush-hours-maximum-overpayment" class="level3">
-<h3 class="anchored" data-anchor-id="the-perfect-storm-weekends-rush-hours-maximum-overpayment">4.5 The Perfect Storm: Weekends + Rush Hours = Maximum Overpayment</h3>
-<div class="viz-container" style="max-width:1100px">
-<p><iframe src="../data/figs/interaction_heatmaps.html" width="100%" height="820" frameborder="0" allowfullscreen="" title="Interaction Heatmaps"></iframe></p>
-</div>
-<div class="callout-interpretation">
-<p><strong>The pattern is clear:</strong> Weekend mornings are the worst time to send Bitcoin. The combination of time-of-day and day-of-week creates predictable fee spikes.</p>
-</div>
-</section>
-</section>
-<section id="the-statistical-proof-yes-this-is-real" class="level2">
-<h2 class="anchored" data-anchor-id="the-statistical-proof-yes-this-is-real">5. The Statistical Proof (Yes, This Is Real)</h2>
-<section id="putting-it-all-together-what-drives-overpayment" class="level3">
-<h3 class="anchored" data-anchor-id="putting-it-all-together-what-drives-overpayment">5.1 Putting It All Together: What Drives Overpayment?</h3>
-<div class="viz-container" style="max-width:1100px">
-<p><iframe src="../data/figs/overpay_interaction_regression.html" width="100%" height="720" frameborder="0" allowfullscreen="" title="Joint Regression Analysis"></iframe></p>
-</div>
-<p class="fig-caption" style="margin-top:0.5rem">
-This regression analysis proves that block fullness, time of day, and weekends all independently contribute to fee overpayment. The interactions between these factors make the effect even stronger.
-</p>
-<p style="margin-top:1em;font-size:1.05em">
-<a href="../data/figs/overpay_interaction_regression_table.csv" target="_blank">Download coefficients (CSV)</a> · <a href="../data/figs/overpay_interaction_regression.html" target="_blank">Full regression report (HTML)</a>
-</p>
-</section>
-</section>
-<section id="what-could-go-wrong-with-our-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="what-could-go-wrong-with-our-analysis">6. What Could Go Wrong With Our Analysis?</h2>
-<p><strong>Being honest about limitations:</strong> - <strong>Time zones matter</strong>: We use ET for price data and UTC for blockchain data—this could shift patterns slightly - <strong>The mempool isn’t perfect</strong>: We use it as a proxy for demand, but it’s not the whole story - <strong>Things change</strong>: Bitcoin has evolved (Ordinals, Lightning Network, etc.), so patterns might shift - <strong>Our thresholds are arbitrary</strong>: We say 2× overpayment is “too much”—but maybe 1.5× or 3× would show different patterns</p>
-</section>
-<section id="so-what-the-practical-takeaways" class="level2">
-<h2 class="anchored" data-anchor-id="so-what-the-practical-takeaways">7. So What? The Practical Takeaways</h2>
-<p><strong>The contrast is striking:</strong> - <strong>Bitcoin’s price</strong>: No weekly patterns you can trade on (efficient market) - <strong>Bitcoin’s blockchain</strong>: Clear, predictable patterns in fee overpayment (inefficient usage)</p>
-<p><strong>What you can actually do:</strong> - Don’t send urgent transactions on weekend mornings - Use dynamic fee estimation tools (not fixed fee settings) - If your transaction can wait, wait for off-peak times - Businesses should implement smart fee policies that adapt to network conditions</p>
-</section>
-<section id="whats-next-testing-these-ideas" class="level2">
-<h2 class="anchored" data-anchor-id="whats-next-testing-these-ideas">8. What’s Next: Testing These Ideas</h2>
-<p><strong>We need to backtest strategies like:</strong> - “Always wait 2 hours if it’s a weekend morning” - “Never pay more than 1.5× the 10th percentile fee” - “Delay non-urgent transactions when blocks are &gt;90% full” - “Using todays conjestion data to preditct tomoreos chage in price”</p>
-<p><strong>Success metrics would include:</strong> - How much in fees you save (in %) - How long your transactions get delayed - Whether the strategy works in different market conditions - Proving correlation to conjestion and volitiolity</p>
-</section>
-<section id="appendices" class="level2">
-<h2 class="anchored" data-anchor-id="appendices">Appendices</h2>
-<section id="a.-extra-price-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="a.-extra-price-analysis">A. Extra Price Analysis</h3>
-<div class="viz-container">
-<p><iframe src="../data/figs/heatmap_month_weekday_returns.html" width="100%" height="520" frameborder="0" allowfullscreen=""></iframe></p>
-</div>
-<p class="fig-caption">
-Monthly patterns show that any weekday effects drift and disappear over time—more evidence that you can’t trade on them.
-</p>
-</section>
-<section id="b.-the-3d-view-of-overpayment" class="level3">
-<h3 class="anchored" data-anchor-id="b.-the-3d-view-of-overpayment">B. The 3D View of Overpayment</h3>
-<div class="viz-container" style="max-width:1100px">
-<p><iframe src="../data/figs/3d_surface_overpayment.html" width="100%" height="720" frameborder="0" allowfullscreen="" title="3D Surface"></iframe></p>
-</div>
-<p class="fig-caption" style="margin-top:0.5rem">
-A 3D surface showing how overpayment changes with block fullness and time of day. The peaks show when people waste the most money.
-</p>
-<div class="viz-container" style="max-width:1100px">
-<p><iframe src="../data/figs/3d_interactive_explore.html" width="100%" height="720" frameborder="0" allowfullscreen="" title="3D Interactive Explorer"></iframe></p>
-</div>
-<p class="fig-caption" style="margin-top:0.5rem">
-Explore the data yourself: each dot represents a time period, with size showing activity and color showing wasted Bitcoin.
-</p>
-</section>
-<section id="c.-get-the-raw-data" class="level3">
-<h3 class="anchored" data-anchor-id="c.-get-the-raw-data">C. Get the Raw Data</h3>
+<section id="key-findings" class="level2">
+<h2 class="anchored" data-anchor-id="key-findings">Key Findings</h2>
 <ul>
-<li><a href="../data/raw/overpay_joint_fullness_hour_daytype_365d.csv" target="_blank">Download complete dataset (CSV)</a></li>
-<li><a href="../data/figs/overpay_interaction_regression_table.csv" target="_blank">Regression coefficients (CSV)</a></li>
+<li><strong>No reliable weekly patterns</strong> in Bitcoin price movements (efficient market)</li>
+<li><strong>Predictable overpayment patterns</strong> in transaction fees (inefficient usage)</li>
+<li><strong>Millions of dollars wasted</strong> by users who overpay during predictable times</li>
 </ul>
 </section>
-<section id="d.-the-math-for-those-who-care" class="level3">
-<h3 class="anchored" data-anchor-id="d.-the-math-for-those-who-care">D. The Math (For Those Who Care)</h3>
-<ul>
-<li>Return calculation: r_t = ln(C_t/C_{t−1}) — natural log of price ratios</li>
-<li>Weekend gap: ln(Monday_close/Friday_close) — captures the full weekend movement</li>
-<li>Block fullness: (space used / maximum space) × 100%</li>
-<li>Clearing fee: The 10th percentile fee in each block (what you actually needed to pay)</li>
-<li>Overpayment ratio: (what you paid / clearing fee) — values &gt;2 mean serious overpayment</li>
-<li>Statistical methods: HAC standard errors for prices, HC3 for blockchain analysis</li>
-</ul>
+<section id="read-the-full-paper" class="level2">
+<h2 class="anchored" data-anchor-id="read-the-full-paper">Read the Full Paper</h2>
+<div style="text-align: center; margin: 2rem 0;">
+<p><a href="paper/paper.html" class="btn btn-primary btn-lg" style="background-color: #F7931A; border-color: #F7931A; color: white; text-decoration: none; padding: 1rem 2rem; border-radius: 0.5rem; font-size: 1.25rem;"> 📄 Read the Complete Research Paper </a></p>
+</div>
 </section>
-</section>
-<section id="glossary-of-bitcoin-terms" class="level2">
-<h2 class="anchored" data-anchor-id="glossary-of-bitcoin-terms">Glossary of Bitcoin Terms</h2>
-<p><strong>Block</strong>: A batch of Bitcoin transactions processed together, like a bus that leaves every ~10 minutes</p>
-<p><strong>Blockspace</strong>: The limited room in each block for transactions (think: seats on the bus)</p>
-<p><strong>Block fullness</strong>: How crowded a block is (percentage of maximum capacity used)</p>
-<p><strong>Clearing fee/price</strong>: The minimum fee that would have gotten your transaction into a block</p>
-<p><strong>Fee rate</strong>: How much you pay per unit of transaction size (satoshis per virtual byte)</p>
-<p><strong>Mempool</strong>: The waiting room where transactions sit before being included in a block</p>
-<p><strong>Overpayment ratio (OPR)</strong>: How many times more than necessary someone paid (2× means double)</p>
-<p><strong>Satoshi (sat)</strong>: The smallest unit of Bitcoin (0.00000001 BTC)</p>
-<p><strong>Transaction fee</strong>: What you pay miners to include your transaction in a block</p>
-<p><strong>UTC</strong>: Coordinated Universal Time (the time zone used for blockchain data)</p>
-<p><strong>Virtual byte (vB)</strong>: A measure of transaction size that determines how much blockspace it uses</p>
-<p><strong>Statistical Terms:</strong></p>
-<p><strong>ANOVA</strong>: Analysis of Variance - a test that compares averages across multiple groups</p>
-<p><strong>Dummy variable</strong>: A yes/no (1/0) variable used in regression (e.g., “Is it Monday?”)</p>
-<p><strong>Eta-squared (η²)</strong>: Measures how much of the variation is explained by our groupings</p>
-<p><strong>HAC/Newey-West</strong>: Methods to calculate accurate error bars when data is volatile</p>
-<p><strong>Kruskal-Wallis</strong>: A statistical test that doesn’t assume normal distributions</p>
-<p><strong>OLS regression</strong>: Ordinary Least Squares - a method to measure relationships between variables</p>
-<p><strong>p-value</strong>: The probability that a pattern is just random chance (lower = more significant)</p>
-<p><strong>R²</strong>: How much of the variation our model explains (0 = nothing, 1 = everything)</p>
-<!-- Auto-resize iframes script remains the same -->
-<script>
-  (function() {
-    function resizeIframe(ifr) {
-      if (!ifr || !ifr.contentWindow) return;
-      try {
-        var doc = ifr.contentDocument || ifr.contentWindow.document;
-        if (!doc) return;
-        var body = doc.body, html = doc.documentElement;
-        var h = Math.max(
-          body ? body.scrollHeight : 0,
-          body ? body.offsetHeight : 0,
-          html ? html.clientHeight : 0,
-          html ? html.scrollHeight : 0,
-          html ? html.offsetHeight : 0
-        );
-        if (h && (!ifr.style.height || parseInt(ifr.style.height, 10) !== h)) {
-          ifr.style.height = (h + 10) + 'px';
-        }
-        ifr.setAttribute('scrolling', 'no');
-        ifr.style.overflow = 'hidden';
-      } catch (e) {
-        // cross-origin or access issue; ignore
-      }
-    }
+<section id="abstract-preview" class="level2">
+<h2 class="anchored" data-anchor-id="abstract-preview">Abstract Preview</h2>
+<p><strong>The Big Picture:</strong> We tested whether Bitcoin returns follow predictable weekly patterns (like stocks’ famous “Monday effect”). Using 10+ years of data, we found no reliable day-of-week patterns for trading. However, we discovered something more interesting: Bitcoin users consistently overpay for transactions during predictable times—weekends and morning hours—wasting millions of dollars in unnecessary fees.</p>
+<hr>
+<p><em>This research was conducted using comprehensive Bitcoin blockchain data and statistical analysis methods.</em></p>
 
-    function init() {
-      var iframes = document.querySelectorAll('.viz-container iframe, iframe');
-      iframes.forEach(function(ifr) {
-        ifr.addEventListener('load', function() { resizeIframe(ifr); });
-        resizeIframe(ifr);
-      });
-      window.addEventListener('resize', function() {
-        iframes.forEach(resizeIframe);
-      });
-      setTimeout(function(){ iframes.forEach(resizeIframe); }, 800);
-      setTimeout(function(){ iframes.forEach(resizeIframe); }, 2000);
-    }
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init);
-    } else {
-      init();
-    }
-  })();
-</script>
 </section>
 
-</main>
-<!-- /main column -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -782,5 +594,5 @@ Explore the data yourself: each dot represents a time period, with size showing 
 
 
 
-<script src="paper_files/libs/quarto-html/zenscroll-min.js"></script>
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

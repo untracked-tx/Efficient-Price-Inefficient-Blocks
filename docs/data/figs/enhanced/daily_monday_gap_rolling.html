@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Monday Gap Analysis - Rolling Averages</title>
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%);
+            border-radius: 16px;
+            color: white;
+            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.15);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .insight-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #1e40af;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .insight-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .insight-card h3 {
+            color: #1e40af;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        
+        .insight-card p {
+            color: #4b5563;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin: 2rem 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-item {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        .methodology {
+            background: #fefefe;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+        
+        .methodology h3 {
+            color: #1f2937;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .methodology p {
+            color: #4b5563;
+            margin-bottom: 1rem;
+        }
+        
+        .methodology ul {
+            color: #4b5563;
+            padding-left: 1.5rem;
+        }
+        
+        .methodology li {
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="chart-container">
+            <div id="plotly-chart" style="width: 100%; height: 600px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Mock data structure matching the original pattern
+        const mockData = {
+            otherDays: {
+                x: [], // Date array would be populated here
+                y: [] // Rolling mean returns for other days
+            },
+            mondayGap: {
+                x: [], // Date array for Mondays
+                y: [] // Rolling mean returns for Monday gap
+            }
+        };
+
+        // Generate sample data for demonstration
+        const startDate = new Date('2019-08-30');
+        const endDate = new Date('2025-01-01');
+        const msPerDay = 24 * 60 * 60 * 1000;
+        
+        // Generate other days data (daily)
+        for (let d = startDate; d < endDate; d = new Date(d.getTime() + msPerDay)) {
+            if (d.getDay() !== 1) { // Not Monday
+                mockData.otherDays.x.push(d.toISOString().split('T')[0]);
+                // Simulate converging trend with some noise
+                const trend = -0.002 * ((d - startDate) / (endDate - startDate));
+                const noise = (Math.random() - 0.5) * 0.01;
+                mockData.otherDays.y.push((0.001 + trend + noise) * 100);
+            }
+        }
+        
+        // Generate Monday data (weekly)
+        for (let d = new Date('2019-09-02'); d < endDate; d = new Date(d.getTime() + 7 * msPerDay)) {
+            mockData.mondayGap.x.push(d.toISOString().split('T')[0]);
+            // Simulate Monday gap that converges over time
+            const trend = -0.004 * ((d - startDate) / (endDate - startDate));
+            const noise = (Math.random() - 0.5) * 0.015;
+            mockData.mondayGap.y.push((-0.002 + trend + noise) * 100);
+        }
+
+        const chartData = [
+            {
+                x: mockData.otherDays.x,
+                y: mockData.otherDays.y,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Other Days',
+                line: {
+                    color: '#1e40af',
+                    width: 2.5
+                },
+                hovertemplate: 'Other Days<br>Date: %{x}<br>60-day Rolling Mean: %{y:.3f}%<extra></extra>'
+            },
+            {
+                x: mockData.mondayGap.x,
+                y: mockData.mondayGap.y,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Monday (Fri→Mon Gap)',
+                line: {
+                    color: '#dc2626',
+                    width: 2.5
+                },
+                hovertemplate: 'Monday Gap<br>Date: %{x}<br>60-day Rolling Mean: %{y:.3f}%<extra></extra>'
+            }
+        ];
+
+        const layout = {
+            title: {
+                text: '<b>Rolling Mean of Daily Returns: Monday (Weekend Gap) vs Other Days</b>',
+                font: {
+                    family: 'Inter, sans-serif',
+                    size: 20,
+                    color: '#1f2937'
+                },
+                x: 0.05
+            },
+            font: {
+                family: 'Inter, sans-serif',
+                size: 14,
+                color: '#374151'
+            },
+            plot_bgcolor: '#fafafa',
+            paper_bgcolor: 'white',
+            margin: {
+                l: 80,
+                r: 50,
+                t: 80,
+                b: 80
+            },
+            height: 600,
+            xaxis: {
+                title: {
+                    text: 'Date',
+                    font: {
+                        family: 'Inter, sans-serif',
+                        size: 16,
+                        color: '#374151'
+                    }
+                },
+                tickfont: {
+                    family: 'Inter, sans-serif',
+                    size: 12,
+                    color: '#4b5563'
+                },
+                gridcolor: '#e5e7eb',
+                linecolor: '#d1d5db'
+            },
+            yaxis: {
+                title: {
+                    text: '60-day Rolling Mean (Log Return %)',
+                    font: {
+                        family: 'Inter, sans-serif',
+                        size: 16,
+                        color: '#374151'
+                    }
+                },
+                tickfont: {
+                    family: 'Inter, sans-serif',
+                    size: 12,
+                    color: '#4b5563'
+                },
+                tickformat: '.3f',
+                gridcolor: '#e5e7eb',
+                linecolor: '#d1d5db',
+                zerolinecolor: '#9ca3af',
+                zerolinewidth: 1.5
+            },
+            legend: {
+                orientation: 'h',
+                x: 0.5,
+                xanchor: 'center',
+                y: -0.1,
+                font: {
+                    family: 'Inter, sans-serif',
+                    size: 14,
+                    color: '#374151'
+                }
+            },
+            hovermode: 'x unified'
+        };
+
+        const config = {
+            responsive: true,
+            displayModeBar: true,
+            modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d', 'autoScale2d'],
+            displaylogo: false,
+            toImageButtonOptions: {
+                format: 'png',
+                filename: 'bitcoin_monday_gap_rolling',
+                height: 600,
+                width: 1200,
+                scale: 2
+            }
+        };
+
+        Plotly.newPlot('plotly-chart', chartData, layout, config);
+    </script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Weekday Strategy Performance Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --secondary-blue: #3b82f6;
+            --accent-blue: #60a5fa;
+            --light-blue: #dbeafe;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --background: #ffffff;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            border-bottom: 2px solid var(--light-blue);
+            background: linear-gradient(135deg, var(--light-blue) 0%, rgba(255,255,255,0.8) 100%);
+            border-radius: 12px;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+            border: 1px solid var(--border);
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .insight-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--primary-blue);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .insight-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .insight-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .insight-content {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .metric {
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .methodology {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 3rem;
+            border: 1px solid var(--border);
+        }
+
+        .methodology h3 {
+            color: var(--primary-blue);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .methodology p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .strategy-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--light-blue);
+            border-radius: 8px;
+        }
+
+        .strategy-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .strategy-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Bitcoin Weekday Strategy Performance</h1>
+            <p class="subtitle">Comparative analysis of single-weekday trading strategies versus buy-and-hold approach</p>
+        </div>
+
+        <div class="insights-grid">
+            <div class="insight-card">
+                <div class="insight-title">
+                    <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Strategy Performance Hierarchy
+                </div>
+                <div class="insight-content">
+                    <span class="metric">Monday-only strategy</span> demonstrates superior long-term performance, significantly outpacing buy-and-hold returns. <span class="metric">Tuesday and Wednesday strategies</span> also show competitive performance, while weekend strategies (Saturday/Sunday) generally underperform the market baseline.
+                </div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-title">
+                    <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                    </svg>
+                    Risk-Adjusted Returns
+                </div>
+                <div class="insight-content">
+                    The cumulative return trajectories reveal that <span class="metric">concentrated trading strategies</span> can potentially deliver enhanced returns but with increased volatility exposure. The Monday strategy shows <span class="metric">3-4x outperformance</span> versus buy-and-hold over the analysis period.
+                </div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-title">
+                    <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m-3-6h6"/>
+                    </svg>
+                    Market Timing Implications
+                </div>
+                <div class="insight-content">
+                    Results suggest that <span class="metric">systematic calendar effects</span> in Bitcoin markets can be exploited through targeted exposure strategies. However, these strategies require precise execution and may not account for transaction costs and slippage in practical implementation.
+                </div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-title">
+                    <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    <div class="container">
+                        <div class="chart-container">
+                            <div id="plotly-chart" style="width:100%;height:600px;"></div>
+                        </div>
+                    </div>
+                    dash: strategyName === 'Buy & Hold' ? 'solid' : 'solid'
+                },
+                hovertemplate: `<b>${strategyName}</b><br>` +
+                              'Date: %{x}<br>' +
+                              'Growth of $1: $%{y:.2f}<br>' +
+                              '<extra></extra>'
+            });
+        });
+
+        const layout = {
+            title: {
+                text: 'Cumulative Return: Single-Weekday Strategies vs Buy & Hold',
+                font: {
+                    family: 'Inter, sans-serif',
+                    size: 24,
+                    color: '#1e3a8a',
+                    weight: 600
+                },
+                x: 0.5,
+                y: 0.95
+            },
+            xaxis: {
+                title: {
+                    text: 'Date',
+                    font: {
+                        family: 'Inter, sans-serif',
+                        size: 14,
+                        color: '#374151',
+                        weight: 500
+                    }
+                },
+                showgrid: true,
+                gridcolor: '#f3f4f6',
+                linecolor: '#e5e7eb',
+                tickfont: {
+                    family: 'Inter, sans-serif',
+                    size: 11,
+                    color: '#6b7280'
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Growth of $1 (USD)',
+                    font: {
+                        family: 'Inter, sans-serif',
+                        size: 14,
+                        color: '#374151',
+                        weight: 500
+                    }
+                },
+                showgrid: true,
+                gridcolor: '#f3f4f6',
+                linecolor: '#e5e7eb',
+                tickfont: {
+                    family: 'Inter, sans-serif',
+                    size: 11,
+                    color: '#6b7280'
+                },
+                tickformat: '$,.2f'
+            },
+            legend: {
+                orientation: 'v',
+                x: 1.02,
+                y: 1,
+                bgcolor: 'rgba(255,255,255,0.9)',
+                bordercolor: '#e5e7eb',
+                borderwidth: 1,
+                font: {
+                    family: 'Inter, sans-serif',
+                    size: 11,
+                    color: '#374151'
+                }
+            },
+            plot_bgcolor: 'white',
+            paper_bgcolor: 'white',
+            margin: {
+                l: 80,
+                r: 120,
+                t: 80,
+                b: 60
+            },
+            hovermode: 'x unified',
+            hoverlabel: {
+                bgcolor: 'white',
+                bordercolor: '#e5e7eb',
+                font: {
+                    family: 'Inter, sans-serif',
+                    size: 12,
+                    color: '#374151'
+                }
+            }
+        };
+
+        Plotly.newPlot('plotly-chart', traces, layout, config);
+
+        // Add responsiveness
+        window.addEventListener('resize', function() {
+            Plotly.Plots.resize('plotly-chart');
+        });
+    </script>
+</body>
+</html>

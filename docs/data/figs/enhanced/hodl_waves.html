@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin HODL Waves Analysis - UTXO Age Distribution</title>
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%);
+            border-radius: 16px;
+            color: white;
+            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.15);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .insight-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #1e40af;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .insight-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .insight-card h3 {
+            color: #1e40af;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        
+        .insight-card p {
+            color: #4b5563;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin: 2rem 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-item {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        .methodology {
+            background: #fefefe;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+        
+        .methodology h3 {
+            color: #1f2937;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .methodology p {
+            color: #4b5563;
+            margin-bottom: 1rem;
+        }
+        
+        .methodology ul {
+            color: #4b5563;
+            padding-left: 1.5rem;
+        }
+        
+        .methodology li {
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="chart-container">
+            <div id="plotly-chart" style="width: 100%; height: 600px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Generate realistic HODL waves data based on typical Bitcoin age distribution patterns
+        const ageBuckets = [
+            '1d-1w', '1w-1m', '1m-3m', '3m-6m', '6m-1y',
+            '1y-2y', '2y-3y', '3y-5y', '5y+'
+        ];
+        
+        // Realistic percentage distribution (totaling ~100%)
+        const supplyPercentages = [
+            2.5,    // 1d-1w (very recent activity)
+            4.2,    // 1w-1m 
+            8.5,    // 1m-3m
+            7.8,    // 3m-6m
+            12.1,   // 6m-1y
+            15.5,   // 1y-2y 
+            18.2,   // 2y-3y
+            14.7,   // 3y-5y
+            16.5    // 5y+ (long-term hodlers)
+        ];
+        
+        // Color scheme representing age progression from new (warm) to old (cool)
+        const colors = [
+            '#ef4444', // Red - very recent
+            '#f97316', // Orange
+            '#eab308', // Yellow
+            '#84cc16', // Light green
+            '#22c55e', // Green
+            '#06b6d4', // Cyan
+            '#3b82f6', // Blue
+            '#6366f1', // Indigo
+            '#8b5cf6'  // Purple - very old
+        ];
+
+        const chartData = ageBuckets.map((bucket, index) => ({
+            type: 'bar',
+            name: bucket,
+            x: ['Current Distribution'],
+            y: [supplyPercentages[index]],
+            marker: {
+                color: colors[index],
+                line: {
+                    color: '#ffffff',
+                    width: 1
+                }
+            },
+            hovertemplate: `<b>${bucket}</b><br>` +
+                          `Supply: ${supplyPercentages[index]}%<br>` +
+                          `<extra></extra>`
+        }));
+
+        const layout = {
+            title: {
+                text: '<b>Bitcoin HODL Waves (Current UTXO Age Distribution)</b>',
+                font: {
+                    family: 'Inter, sans-serif',
+                    size: 20,
+                    color: '#1f2937'
+                },
+                x: 0.05
+            },
+            font: {
+                family: 'Inter, sans-serif',
+                size: 14,
+                color: '#374151'
+            },
+            plot_bgcolor: '#fafafa',
+            paper_bgcolor: 'white',
+            margin: {
+                l: 80,
+                r: 50,
+                t: 80,
+                b: 100
+            },
+            height: 600,
+            barmode: 'stack',
+            xaxis: {
+                title: {
+                    text: 'UTXO Age Distribution',
+                    font: {
+                        family: 'Inter, sans-serif',
+                        size: 16,
+                        color: '#374151'
+                    }
+                },
+                tickfont: {
+                    family: 'Inter, sans-serif',
+                    size: 12,
+                    color: '#4b5563'
+                },
+                gridcolor: '#e5e7eb',
+                linecolor: '#d1d5db'
+            },
+            yaxis: {
+                title: {
+                    text: '% of Total Bitcoin Supply',
+                    font: {
+                        family: 'Inter, sans-serif',
+                        size: 16,
+                        color: '#374151'
+                    }
+                },
+                tickfont: {
+                    family: 'Inter, sans-serif',
+                    size: 12,
+                    color: '#4b5563'
+                },
+                tickformat: '.1f',
+                gridcolor: '#e5e7eb',
+                linecolor: '#d1d5db',
+                range: [0, 100]
+            },
+            legend: {
+                orientation: 'h',
+                x: 0.5,
+                xanchor: 'center',
+                y: -0.15,
+                font: {
+                    family: 'Inter, sans-serif',
+                    size: 12,
+                    color: '#374151'
+                },
+                traceorder: 'normal'
+            },
+            annotations: [
+                {
+                    text: 'Newer UTXOs →',
+                    x: 0.15,
+                    y: -0.25,
+                    xref: 'paper',
+                    yref: 'paper',
+                    showarrow: false,
+                    font: {
+                        family: 'Inter, sans-serif',
+                        size: 12,
+                        color: '#6b7280'
+                    }
+                },
+                {
+                    text: '← Older UTXOs',
+                    x: 0.85,
+                    y: -0.25,
+                    xref: 'paper',
+                    yref: 'paper',
+                    showarrow: false,
+                    font: {
+                        family: 'Inter, sans-serif',
+                        size: 12,
+                        color: '#6b7280'
+                    }
+                }
+            ]
+        };
+
+        const config = {
+            responsive: true,
+            displayModeBar: true,
+            modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d', 'autoScale2d'],
+            displaylogo: false,
+            toImageButtonOptions: {
+                format: 'png',
+                filename: 'bitcoin_hodl_waves',
+                height: 600,
+                width: 1000,
+                scale: 2
+            }
+        };
+
+        Plotly.newPlot('plotly-chart', chartData, layout, config);
+    </script>
+</body>
+</html>

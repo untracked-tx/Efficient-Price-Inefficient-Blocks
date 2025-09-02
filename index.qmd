@@ -1,0 +1,45 @@
+---
+title: "Efficient Price, Inefficient Blocks"
+subtitle: "Research on Bitcoin Price Patterns and Transaction Fee Inefficiencies"
+author: "Liam Murphy"
+format:
+  html:
+    toc: false
+    self-contained: false
+    theme: [cosmo, paper/styles.scss]
+    smooth-scroll: true
+    link-external-newwindow: true
+    page-layout: full
+    title-block-banner: true
+    title-block-banner-color: "#F7931A"
+    css: paper/styles.scss
+execute:
+  echo: false
+  warning: false
+---
+
+## Welcome
+
+This research explores whether Bitcoin exhibits predictable price patterns like traditional markets, and uncovers significant inefficiencies in how users pay transaction fees.
+
+## Key Findings
+
+- **No reliable weekly patterns** in Bitcoin price movements (efficient market)
+- **Predictable overpayment patterns** in transaction fees (inefficient usage)
+- **Millions of dollars wasted** by users who overpay during predictable times
+
+## Read the Full Paper
+
+<div style="text-align: center; margin: 2rem 0;">
+<a href="paper/paper.html" class="btn btn-primary btn-lg" style="background-color: #F7931A; border-color: #F7931A; color: white; text-decoration: none; padding: 1rem 2rem; border-radius: 0.5rem; font-size: 1.25rem;">
+📄 Read the Complete Research Paper
+</a>
+</div>
+
+## Abstract Preview
+
+**The Big Picture:** We tested whether Bitcoin returns follow predictable weekly patterns (like stocks' famous "Monday effect"). Using 10+ years of data, we found no reliable day-of-week patterns for trading. However, we discovered something more interesting: Bitcoin users consistently overpay for transactions during predictable times—weekends and morning hours—wasting millions of dollars in unnecessary fees.
+
+---
+
+*This research was conducted using comprehensive Bitcoin blockchain data and statistical analysis methods.*
