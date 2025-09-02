@@ -1,0 +1,35 @@
+field name	mode	type	description
+hash	REQUIRED	STRING	The hash of this transaction
+size	NULLABLE	INTEGER	The size of this transaction in bytes
+virtual_size	NULLABLE	INTEGER	The virtual transaction size (differs from size for witness transactions)
+version	NULLABLE	INTEGER	Protocol version specified in block which contained this transaction
+lock_time	NULLABLE	INTEGER	Earliest time that miners can include the transaction in their hashing of the Merkle root to attach it in the latest block of the blockchain
+block_hash	REQUIRED	STRING	Hash of the block which contains this transaction
+block_number	REQUIRED	INTEGER	Number of the block which contains this transaction
+block_timestamp	REQUIRED	TIMESTAMP	Timestamp of the block which contains this transaction
+block_timestamp_month	REQUIRED	DATE	Month of the block which contains this transaction
+input_count	NULLABLE	INTEGER	The number of inputs in the transaction
+output_count	NULLABLE	INTEGER	The number of outputs in the transaction
+input_value	NULLABLE	NUMERIC	Total value of inputs in the transaction
+output_value	NULLABLE	NUMERIC	Total value of outputs in the transaction
+is_coinbase	NULLABLE	BOOLEAN	true if this transaction is a coinbase transaction
+fee	NULLABLE	NUMERIC	The fee paid by this transaction
+inputs	REPEATED	RECORD	Transaction inputs
+outputs	REPEATED	RECORD	Transaction outputs
+inputs.index	REQUIRED	INTEGER	0-indexed number of an input within a transaction
+inputs.spent_transaction_hash	NULLABLE	STRING	The hash of the transaction which contains the output that this input spends
+inputs.spent_output_index	NULLABLE	INTEGER	The index of the output this input spends
+inputs.script_asm	NULLABLE	STRING	Symbolic representation of the bitcoin's script language op-codes
+inputs.script_hex	NULLABLE	STRING	Hexadecimal representation of the bitcoin's script language op-codes
+inputs.sequence	NULLABLE	INTEGER	A number intended to allow unconfirmed time-locked transactions to be updated before being finalized; not currently used except to disable locktime in a transaction
+inputs.required_signatures	NULLABLE	INTEGER	The number of signatures required to authorize the spent output
+inputs.type	NULLABLE	STRING	The address type of the spent output
+inputs.addresses	REPEATED	STRING	Addresses which own the spent output
+inputs.value	NULLABLE	NUMERIC	The value in base currency attached to the spent output
+outputs.index	REQUIRED	INTEGER	0-indexed number of an output within a transaction used by a later transaction to refer to that specific output
+outputs.script_asm	NULLABLE	STRING	Symbolic representation of the bitcoin's script language op-codes
+outputs.script_hex	NULLABLE	STRING	Hexadecimal representation of the bitcoin's script language op-codes
+outputs.required_signatures	NULLABLE	INTEGER	The number of signatures required to authorize spending of this output
+outputs.type	NULLABLE	STRING	The address type of the output
+outputs.addresses	REPEATED	STRING	Addresses which own this output
+outputs.value	NULLABLE	NUMERIC	The value in base currency attached to this output

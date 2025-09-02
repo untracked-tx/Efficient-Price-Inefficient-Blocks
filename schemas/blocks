@@ -1,0 +1,14 @@
+field name	mode	type	description
+hash	REQUIRED	STRING	Hash of this block
+size	NULLABLE	INTEGER	The size of block data in bytes
+stripped_size	NULLABLE	INTEGER	The size of block data in bytes excluding witness data
+weight	NULLABLE	INTEGER	Three times the base size plus the total size. https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki
+number	REQUIRED	INTEGER	The number of the block
+version	NULLABLE	INTEGER	Protocol version specified in block header
+merkle_root	NULLABLE	STRING	The root node of a Merkle tree, where leaves are transaction hashes
+timestamp	REQUIRED	TIMESTAMP	Block creation timestamp specified in block header
+timestamp_month	REQUIRED	DATE	Month of the block creation timestamp specified in block header
+nonce	NULLABLE	STRING	Difficulty solution specified in block header
+bits	NULLABLE	STRING	Difficulty threshold specified in block header
+coinbase_param	NULLABLE	STRING	Data specified in the coinbase transaction of this block
+transaction_count	NULLABLE	INTEGER	Number of transactions included in this block

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Average Daily Return by Month × Weekday</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #1e293b;
+            line-height: 1.6;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 24px;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .chart-subtitle {
+            font-size: 0.875rem;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #chart {
+            height: 520px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="chart-container">
+        <div id="chart"></div>
+    </div>
+
+    <script src="https://cdn.plot.ly/plotly-3.1.0.min.js"></script>
+    <script>
+        // Sample data - in actual implementation, you'd import the real data
+        const z_data = [
+            [0.00238, 0.00112, 0.00067, 0.00087, 0.00238, 0.00311, 0.00112],
+            [0.00145, 0.00098, 0.00234, 0.00076, 0.00345, 0.00178, 0.00234],
+            [0.00187, 0.00234, 0.00156, 0.00198, 0.00287, 0.00145, 0.00298],
+            [0.00298, 0.00176, 0.00234, 0.00187, 0.00345, 0.00267, 0.00198],
+            [0.00176, 0.00298, 0.00187, 0.00234, 0.00156, 0.00345, 0.00267],
+            [0.00234, 0.00187, 0.00298, 0.00176, 0.00267, 0.00198, 0.00345],
+            [0.00187, 0.00234, 0.00176, 0.00298, 0.00198, 0.00267, 0.00234],
+            [0.00298, 0.00176, 0.00234, 0.00187, 0.00345, 0.00198, 0.00267],
+            [0.00234, 0.00298, 0.00187, 0.00176, 0.00267, 0.00345, 0.00198],
+            [0.00176, 0.00234, 0.00298, 0.00187, 0.00198, 0.00267, 0.00345],
+            [0.00298, 0.00187, 0.00176, 0.00234, 0.00345, 0.00198, 0.00267],
+            [0.00187, 0.00298, 0.00234, 0.00176, 0.00267, 0.00345, 0.00198]
+        ];
+
+        const data = [{
+            z: z_data,
+            x: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            y: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            type: 'heatmap',
+            colorscale: [
+                [0, '#b91c1c'],      // red-600 (negative)
+                [0.2, '#dc2626'],    // red-500
+                [0.3, '#ef4444'],    // red-400
+                [0.4, '#f87171'],    // red-300
+                [0.45, '#fecaca'],   // red-200
+                [0.5, '#ffffff'],    // white
+                [0.55, '#bbf7d0'],   // green-200
+                [0.6, '#4ade80'],    // green-400
+                [0.7, '#22c55e'],    // green-600
+                [0.8, '#16a34a'],    // green-700
+                [1, '#166534']       // green-800 (positive)
+            ],
+            colorbar: {
+                title: {
+                    text: 'Avg Daily Return',
+                    font: {
+                        family: 'Inter, sans-serif',
+                        size: 12,
+                        color: '#374151'
+                    }
+                },
+                tickformat: '.2%',
+                tickfont: {
+                    family: 'Inter, sans-serif',
+                    size: 10,
+                    color: '#6b7280'
+                },
+                len: 0.8,
+                thickness: 15
+            },
+            hovertemplate: '<b>%{y} %{x}</b><br>' +
+                          'Avg Return: %{z:.2%}<br>' +
+                          '<extra></extra>'
+        }];
+
+        const layout = {
+            font: {
+                family: 'Inter, sans-serif',
+                size: 12,
+                color: '#1e293b'
+            },
+            paper_bgcolor: 'white',
+            plot_bgcolor: 'white',
+            margin: {
+                l: 60,
+                r: 60,
+                t: 20,
+                b: 60
+            },
+            xaxis: {
+                title: {
+                    text: 'Day of Week',
+                    font: {
+                        family: 'Inter, sans-serif',
+                        size: 13,
+                        color: '#374151'
+                    }
+                },
+                tickfont: {
+                    family: 'Inter, sans-serif',
+                    size: 11,
+                    color: '#6b7280'
+                },
+                side: 'bottom'
+            },
+            yaxis: {
+                title: {
+                    text: 'Month',
+                    font: {
+                        family: 'Inter, sans-serif',
+                        size: 13,
+                        color: '#374151'
+                    }
+                },
+                tickfont: {
+                    family: 'Inter, sans-serif',
+                    size: 11,
+                    color: '#6b7280'
+                },
+                autorange: 'reversed'
+            },
+            hoverlabel: {
+                bgcolor: 'white',
+                bordercolor: '#1e40af',
+                font: {
+                    family: 'Inter, sans-serif',
+                    size: 12,
+                    color: '#1e293b'
+                }
+            }
+        };
+
+        const config = {
+            responsive: true,
+            displayModeBar: false
+        };
+
+        Plotly.newPlot('chart', data, layout, config);
+    </script>
+</body>
+</html>

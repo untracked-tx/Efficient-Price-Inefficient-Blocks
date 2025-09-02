@@ -1,0 +1,325 @@
+---
+title: "Efficient Price, Inefficient Blocks"
+subtitle: "Why Bitcoin's Price Has No Weekly Pattern, But Its Users Keep Overpaying for Transactions"
+author: "Liam Murphy"
+format:
+  html:
+    toc: false
+    self-contained: false
+    theme: [cosmo, styles.scss]
+    smooth-scroll: true
+    link-external-newwindow: true
+    page-layout: full
+    title-block-banner: true
+    title-block-banner-color: "#F7931A"
+    css: styles.scss
+execute:
+  echo: false
+  warning: false
+---
+
+## Abstract
+::: {.abstract}
+**The Big Picture:** We tested whether Bitcoin returns follow predictable weekly patterns (like stocks' famous "Monday effect"). Using 10+ years of data, we found no reliable day-of-week patterns for trading. However, we discovered something more interesting: Bitcoin users consistently overpay for transactions during predictable times—weekends and morning hours—wasting millions of dollars in unnecessary fees. This creates real opportunities for cost savings, and begs the question of what todays congestion can tell us about tomorows price, particularly when users are significantly overpaying.
+:::
+
+## 1. Introduction: What We're Looking For
+
+Everyone wants to find patterns in Bitcoin prices. The stock market has its "Monday effect" (where prices supposedly drop on Mondays), so we wondered: does Bitcoin have something similar? 
+
+We tested Bitcoin's daily returns across different time windows to see if certain days consistently perform better or worse. We used several statistical tests (think of them as different microscopes looking at the same data) including ANOVA (which compares averages across groups) and OLS regression (which measures relationships between variables).
+
+**Spoiler alert:** The price patterns aren't there. But we found something better—predictable inefficiencies in how people use the Bitcoin network that cost real money.
+
+## 2. How We Did This (The Simple Version)
+::: {.callout-note}
+**Our Toolkit:**  
+- **Daily returns**: We calculate how much Bitcoin's price changes each day (as a percentage)
+- **Statistical tests**: We use ANOVA (compares weekday averages) and Kruskal-Wallis (a backup test that doesn't assume normal distributions)
+- **OLS regression**: A method that measures if Monday really is different from other days, using "dummy variables" (just yes/no flags for each weekday)
+- **Robust standard errors**: Fancy error bars that account for Bitcoin's wild volatility
+- **Time windows**: We check patterns over 6 months, 1 year, 2 years, 5 years, and all available data
+
+For the blockchain analysis:
+- **Overpayment ratio (OPR)**: How much extra someone paid compared to what they needed to
+- **Block fullness**: How crowded the Bitcoin "bus" is (more on this later)
+- **Clearing price**: The minimum fee that would have gotten your transaction through
+:::
+
+## 3. The Price Story: No Magic Trading Days
+
+### 3.1 The Bottom Line — Bitcoin Weekday Effects Don't Exist (Interactive Dashboard)
+<div class="viz-container" style="max-width:1100px">
+  <iframe src="../data/figs/btc_weekday_lead_dashboard.html"
+          width="100%" height="720" frameborder="0" allowfullscreen></iframe>
+</div>
+<p class="fig-caption" style="margin-top:0.5rem">
+Figure ES. Play with this dashboard to see for yourself: weekday patterns in Bitcoin are weak and unstable. Use the timeframe selector to explore different periods.
+</p>
+
+**What this shows:**
+- Weekday effects are tiny and keep changing
+- Statistical tests mostly say "no significant difference" (high p-values mean no pattern)
+- The "Monday effect" comes and goes—not something you can trade on
+
+### 3.2 Is Monday Special? Rolling Analysis Shows: Nope
+<div class="viz-container" style="max-width:1100px">
+  <iframe src="../data/figs/rolling_monday_diff.html" width="100%" height="520" frameborder="0" allowfullscreen title="Rolling Monday minus Others mean difference"></iframe>
+</div>
+<p class="fig-caption" style="margin-top:0.5rem">
+This chart tracks whether Monday returns are different from other days over rolling windows. The gray bands show our confidence—when they include zero (the dashed line), there's no real difference.
+</p>
+
+### 3.3 The Statistical Evidence (For Those Who Like Numbers)
+
+::: {.panel-tabset}
+### Regression Results
+<div class="viz-container" style="max-width:950px">
+  <iframe src="../data/figs/btc_regression_coeffs_interactive.html" width="100%" height="540" frameborder="0" allowfullscreen></iframe>
+</div>
+
+### Global Tests
+<div class="viz-container" style="max-width:950px">
+  <iframe src="../data/figs/btc_anova_summary_interactive.html" width="100%" height="540" frameborder="0" allowfullscreen></iframe>
+</div>
+:::
+
+<p class="fig-caption" style="margin-top:0.5rem">
+Figure 1. How much each weekday differs from Monday (in percentage points). The error bars show our uncertainty—notice how they all overlap with zero.
+</p>
+<p class="fig-caption">
+Figure 2. Different statistical tests all saying the same thing: weekdays don't matter for Bitcoin returns.
+</p>
+
+::: callout-interpretation
+**Translation:** You can't reliably make money by trading Bitcoin on specific weekdays. Any patterns you see are probably just random noise that won't repeat.
+:::
+
+**Download the data:**  
+- [Regression coefficients (CSV)](../data/figs/btc_regression_coeffs_table.csv)  
+- [Statistical test results (CSV)](../data/figs/btc_anova_summary_table.csv)
+
+## 4. The Real Discovery: People Waste Money on Transaction Fees
+
+Now here's where it gets interesting. While Bitcoin's price is efficiently random, the way people use Bitcoin is predictably inefficient.
+
+### 4.1 The Damage: How Much Money Gets Wasted
+<div class="viz-container" style="max-width:900px">
+  <iframe src="../data/figs/overpay_totals_windows.html" width="100%" height="240" frameborder="0" allowfullscreen title="Fee Overpayment Totals"></iframe>
+</div>
+<p class="fig-caption" style="margin-top:0.5rem">
+Total Bitcoin wasted by users who paid at least 2× more than necessary for their transactions. This is real money down the drain.
+</p>
+
+<div class="viz-container" style="max-width:1200px;margin-top:0.75rem">
+  <iframe src="../data/figs/bitcoin-bus-interactive.html" width="100%" height="800" frameborder="0" allowfullscreen title="Bitcoin Bus Stop Interactive"></iframe>
+</div>
+
+### 4.2 Who's Overpaying and When?
+<div class="viz-container" style="max-width:1400px; overflow: visible;">
+  <iframe src="../data/figs/user_segment_3d.html" width="100%" height="1500" frameborder="0" allowfullscreen title="User Segment Analysis"></iframe>
+</div>
+<p class="fig-caption" style="margin-top:0.5rem">
+Different types of users overpay at different times. This 3D view shows when and how much each group wastes.
+</p>
+
+### 4.3 The Network Gets Predictably Busy
+<div class="viz-container">
+  <iframe src="../data/figs/mempool_heatmap.html" width="100%" height="520" frameborder="0" allowfullscreen></iframe>
+</div>
+<div class="viz-container">
+  <iframe src="../data/figs/seasonality_heatmap_year.html" width="100%" height="520" frameborder="0" allowfullscreen></iframe>
+</div>
+<div class="viz-container">
+  <iframe src="../data/figs/seasonality_heatmap_5yr.html" width="100%" height="520" frameborder="0" allowfullscreen></iframe>
+</div>
+
+### 4.4 When People Overpay: Clear Patterns Emerge
+<div class="viz-container">
+  <iframe src="../data/figs/fee_overpayment_patterns_5yr_interactive.html" width="100%" height="1200" frameborder="0" allowfullscreen></iframe>
+</div>
+
+::: callout-interpretation
+**What this means:** People consistently overpay for Bitcoin transactions on weekends and during morning hours (UTC). Unlike price patterns, this is real and persistent—you can save money by timing your transactions better.
+:::
+
+### 4.5 The Perfect Storm: Weekends + Rush Hours = Maximum Overpayment
+<div class="viz-container" style="max-width:1100px">
+  <iframe src="../data/figs/interaction_heatmaps.html" width="100%" height="820" frameborder="0" allowfullscreen title="Interaction Heatmaps"></iframe>
+</div>
+
+::: callout-interpretation
+**The pattern is clear:** Weekend mornings are the worst time to send Bitcoin. The combination of time-of-day and day-of-week creates predictable fee spikes.
+:::
+
+## 5. The Statistical Proof (Yes, This Is Real)
+
+### 5.1 Putting It All Together: What Drives Overpayment?
+<div class="viz-container" style="max-width:1100px">
+  <iframe src="../data/figs/overpay_interaction_regression.html" width="100%" height="720" frameborder="0" allowfullscreen title="Joint Regression Analysis"></iframe>
+</div>
+<p class="fig-caption" style="margin-top:0.5rem">
+This regression analysis proves that block fullness, time of day, and weekends all independently contribute to fee overpayment. The interactions between these factors make the effect even stronger.
+</p>
+<p style="margin-top:1em;font-size:1.05em">
+  <a href="../data/figs/overpay_interaction_regression_table.csv" target="_blank">Download coefficients (CSV)</a> ·
+  <a href="../data/figs/overpay_interaction_regression.html" target="_blank">Full regression report (HTML)</a>
+</p>
+
+## 6. What Could Go Wrong With Our Analysis?
+
+**Being honest about limitations:**
+- **Time zones matter**: We use ET for price data and UTC for blockchain data—this could shift patterns slightly
+- **The mempool isn't perfect**: We use it as a proxy for demand, but it's not the whole story
+- **Things change**: Bitcoin has evolved (Ordinals, Lightning Network, etc.), so patterns might shift
+- **Our thresholds are arbitrary**: We say 2× overpayment is "too much"—but maybe 1.5× or 3× would show different patterns
+
+## 7. So What? The Practical Takeaways
+
+**The contrast is striking:**
+- **Bitcoin's price**: No weekly patterns you can trade on (efficient market)
+- **Bitcoin's blockchain**: Clear, predictable patterns in fee overpayment (inefficient usage)
+
+**What you can actually do:**
+- Don't send urgent transactions on weekend mornings
+- Use dynamic fee estimation tools (not fixed fee settings)
+- If your transaction can wait, wait for off-peak times
+- Businesses should implement smart fee policies that adapt to network conditions
+
+## 8. What's Next: Testing These Ideas
+
+**We need to backtest strategies like:**
+- "Always wait 2 hours if it's a weekend morning"
+- "Never pay more than 1.5× the 10th percentile fee"
+- "Delay non-urgent transactions when blocks are >90% full"
+- "Using todays conjestion data to preditct tomoreos chage in price "
+
+**Success metrics would include:**
+- How much in fees you save (in %)
+- How long your transactions get delayed
+- Whether the strategy works in different market conditions
+- Proving correlation to conjestion and volitiolity
+
+## Appendices
+
+### A. Extra Price Analysis
+<div class="viz-container">
+  <iframe src="../data/figs/heatmap_month_weekday_returns.html" width="100%" height="520" frameborder="0" allowfullscreen></iframe>
+</div>
+<p class="fig-caption">Monthly patterns show that any weekday effects drift and disappear over time—more evidence that you can't trade on them.</p>
+
+### B. The 3D View of Overpayment
+<div class="viz-container" style="max-width:1100px">
+  <iframe src="../data/figs/3d_surface_overpayment.html" width="100%" height="720" frameborder="0" allowfullscreen title="3D Surface"></iframe>
+</div>
+<p class="fig-caption" style="margin-top:0.5rem">
+A 3D surface showing how overpayment changes with block fullness and time of day. The peaks show when people waste the most money.
+</p>
+
+<div class="viz-container" style="max-width:1100px">
+  <iframe src="../data/figs/3d_interactive_explore.html" width="100%" height="720" frameborder="0" allowfullscreen title="3D Interactive Explorer"></iframe>
+</div>
+<p class="fig-caption" style="margin-top:0.5rem">
+Explore the data yourself: each dot represents a time period, with size showing activity and color showing wasted Bitcoin.
+</p>
+
+### C. Get the Raw Data
+- <a href="../data/raw/overpay_joint_fullness_hour_daytype_365d.csv" target="_blank">Download complete dataset (CSV)</a>
+- <a href="../data/figs/overpay_interaction_regression_table.csv" target="_blank">Regression coefficients (CSV)</a>
+
+### D. The Math (For Those Who Care)
+- Return calculation: r_t = ln(C_t/C_{t−1}) — natural log of price ratios
+- Weekend gap: ln(Monday_close/Friday_close) — captures the full weekend movement
+- Block fullness: (space used / maximum space) × 100%
+- Clearing fee: The 10th percentile fee in each block (what you actually needed to pay)
+- Overpayment ratio: (what you paid / clearing fee) — values >2 mean serious overpayment
+- Statistical methods: HAC standard errors for prices, HC3 for blockchain analysis
+
+## Glossary of Bitcoin Terms
+
+**Block**: A batch of Bitcoin transactions processed together, like a bus that leaves every ~10 minutes
+
+**Blockspace**: The limited room in each block for transactions (think: seats on the bus)
+
+**Block fullness**: How crowded a block is (percentage of maximum capacity used)
+
+**Clearing fee/price**: The minimum fee that would have gotten your transaction into a block
+
+**Fee rate**: How much you pay per unit of transaction size (satoshis per virtual byte)
+
+**Mempool**: The waiting room where transactions sit before being included in a block
+
+**Overpayment ratio (OPR)**: How many times more than necessary someone paid (2× means double)
+
+**Satoshi (sat)**: The smallest unit of Bitcoin (0.00000001 BTC)
+
+**Transaction fee**: What you pay miners to include your transaction in a block
+
+**UTC**: Coordinated Universal Time (the time zone used for blockchain data)
+
+**Virtual byte (vB)**: A measure of transaction size that determines how much blockspace it uses
+
+**Statistical Terms:**
+
+**ANOVA**: Analysis of Variance - a test that compares averages across multiple groups
+
+**Dummy variable**: A yes/no (1/0) variable used in regression (e.g., "Is it Monday?")
+
+**Eta-squared (η²)**: Measures how much of the variation is explained by our groupings
+
+**HAC/Newey-West**: Methods to calculate accurate error bars when data is volatile
+
+**Kruskal-Wallis**: A statistical test that doesn't assume normal distributions
+
+**OLS regression**: Ordinary Least Squares - a method to measure relationships between variables
+
+**p-value**: The probability that a pattern is just random chance (lower = more significant)
+
+**R²**: How much of the variation our model explains (0 = nothing, 1 = everything)
+
+<!-- Auto-resize iframes script remains the same -->
+<script>
+  (function() {
+    function resizeIframe(ifr) {
+      if (!ifr || !ifr.contentWindow) return;
+      try {
+        var doc = ifr.contentDocument || ifr.contentWindow.document;
+        if (!doc) return;
+        var body = doc.body, html = doc.documentElement;
+        var h = Math.max(
+          body ? body.scrollHeight : 0,
+          body ? body.offsetHeight : 0,
+          html ? html.clientHeight : 0,
+          html ? html.scrollHeight : 0,
+          html ? html.offsetHeight : 0
+        );
+        if (h && (!ifr.style.height || parseInt(ifr.style.height, 10) !== h)) {
+          ifr.style.height = (h + 10) + 'px';
+        }
+        ifr.setAttribute('scrolling', 'no');
+        ifr.style.overflow = 'hidden';
+      } catch (e) {
+        // cross-origin or access issue; ignore
+      }
+    }
+
+    function init() {
+      var iframes = document.querySelectorAll('.viz-container iframe, iframe');
+      iframes.forEach(function(ifr) {
+        ifr.addEventListener('load', function() { resizeIframe(ifr); });
+        resizeIframe(ifr);
+      });
+      window.addEventListener('resize', function() {
+        iframes.forEach(resizeIframe);
+      });
+      setTimeout(function(){ iframes.forEach(resizeIframe); }, 800);
+      setTimeout(function(){ iframes.forEach(resizeIframe); }, 2000);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>

@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Bus Stop - Understanding Blockspace Markets</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            height: 100vh;
+            max-height: 800px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #F7931A;
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .scene-container {
+            flex: 1;
+            position: relative;
+            background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 60%, #d3d3d3 60%, #d3d3d3 100%);
+            overflow: hidden;
+        }
+
+        .scene {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: none;
+            padding: 20px;
+        }
+
+        .scene.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .controls {
+            background: #2c3e50;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            background: #F7931A;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #e6851a;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .scene-indicator {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #666;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: #F7931A;
+            transform: scale(1.3);
+        }
+
+        .bus-stop {
+            width: 700px;
+            height: 400px;
+            position: relative;
+        }
+
+        .bus {
+            width: 300px;
+            height: 120px;
+            background: #ffd700;
+            border-radius: 10px;
+            position: absolute;
+            bottom: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 1s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .bus.arriving {
+            animation: busArrive 2s ease-in-out;
+        }
+
+        @keyframes busArrive {
+            from { left: -350px; }
+            to { left: 200px; }
+        }
+
+        .passenger {
+            width: 30px;
+            height: 50px;
+            background: #4a90e2;
+            border-radius: 15px 15px 0 0;
+            position: absolute;
+            bottom: 100px;
+            transition: all 0.5s;
+        }
+
+        .passenger.small {
+            height: 40px;
+            background: #7ed321;
+        }
+
+        .passenger.large {
+            height: 60px;
+            width: 40px;
+            background: #d0021b;
+        }
+
+        .fee-label {
+            position: absolute;
+            top: -25px;
+            background: #F7931A;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .mempool-queue {
+            position: absolute;
+            bottom: 100px;
+            right: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .queue-item {
+            width: 40px;
+            height: 8px;
+            background: #666;
+            border-radius: 4px;
+            opacity: 0.6;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .info-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            max-width: 650px;
+            text-align: center;
+        }
+
+        .info-box h2 {
+            color: #F7931A;
+            margin-bottom: 15px;
+        }
+
+        .info-box p {
+            color: #666;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        .block-visual {
+            width: 400px;
+            height: 100px;
+            background: #2c3e50;
+            border-radius: 10px;
+            display: flex;
+            padding: 10px;
+            gap: 5px;
+            margin: 20px auto;
+        }
+
+        .block-space {
+            flex: 1;
+            background: #34495e;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .block-space.filled {
+            background: #F7931A;
+        }
+
+        .highlight {
+            color: #F7931A;
+            font-weight: bold;
+        }
+
+        .comparison-visual {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .price-box {
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .price-box.normal {
+            background: #7ed321;
+        }
+
+        .price-box.overpay {
+            background: #d0021b;
+            color: white;
+        }
+
+        .chart-container {
+            width: 500px;
+            height: 200px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            position: relative;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .bar {
+            display: inline-block;
+            width: 40px;
+            background: #F7931A;
+            margin: 0 5px;
+            vertical-align: bottom;
+            transition: all 0.5s;
+        }
+
+        .timeline {
+            width: 100%;
+            height: 60px;
+            background: #2c3e50;
+            border-radius: 10px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-marker {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 40px;
+            background: #F7931A;
+            animation: moveTime 10s linear infinite;
+        }
+
+        @keyframes moveTime {
+            from { left: 0%; }
+            to { left: 100%; }
+        }
+
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .pattern-item {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #F7931A;
+        }
+
+        .seats-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 3px;
+            margin: 15px auto;
+            width: 300px;
+        }
+
+        .seat {
+            width: 25px;
+            height: 25px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
+        .seat.taken {
+            background: #F7931A;
+        }
+
+        .seat.overpaid {
+            background: #d0021b;
+        }
+
+        .variability-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .block-time {
+            padding: 10px 20px;
+            background: #F7931A;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .arrow {
+            font-size: 24px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚌 The Bitcoin Bus Stop</h1>
+            <p>Understanding Blockspace Markets & Fee Dynamics</p>
+        </div>
+
+        <div class="scene-container">
+            <!-- Scene 0: What is Blockspace -->
+            <div class="scene active" id="scene-0">
+                <div class="info-box">
+                    <h2>What is "Blockspace"?</h2>
+                    <p>Think of Bitcoin like a bus line:</p>
+                    <div class="block-visual">
+                        <div class="block-space filled"></div>
+                        <div class="block-space filled"></div>
+                        <div class="block-space filled"></div>
+                        <div class="block-space"></div>
+                    </div>
+                    <p>• A bus (block) leaves roughly every <span class="highlight">10 minutes</span><br>
+                    • Each bus has <span class="highlight">limited seats</span> (4MB capacity)<br>
+                    • People wanting seats are <span class="highlight">transactions</span><br>
+                    • To get on, riders add a <span class="highlight">tip (fee)</span></p>
+                    <p style="margin-top: 20px;"><strong>Blockspace = Total seats on the next bus</strong></p>
+                </div>
+            </div>
+
+            <!-- Scene 1: Size Matters (Feerate) -->
+            <div class="scene" id="scene-1">
+                <div class="bus-stop">
+                    <div class="passenger small" style="left: 100px;">
+                        <div class="fee-label">$10 for 1 seat = 10/seat</div>
+                    </div>
+                    <div class="passenger large" style="left: 200px;">
+                        <div class="fee-label">$30 for 5 seats = 6/seat</div>
+                    </div>
+                    <div class="passenger" style="left: 300px;">
+                        <div class="fee-label">$20 for 2 seats = 10/seat</div>
+                    </div>
+                    <div class="info-box" style="position: absolute; bottom: 20px;">
+                        <h2>Why "Feerate" Wins</h2>
+                        <p>Transactions vary in size (bytes of data).<br>
+                        What matters isn't total fee, but <span class="highlight">fee per byte</span> (sats/vB).<br>
+                        The small transaction paying $10/seat beats the large one paying $6/seat!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scene 2: Who Runs the Buses (Miners) -->
+            <div class="scene" id="scene-2">
+                <div class="bus-stop">
+                    <div class="bus arriving">
+                        <div style="color: #2c3e50; font-weight: bold;">MINER BUS</div>
+                    </div>
+                    <div class="info-box" style="position: absolute; top: 20px; right: 20px;">
+                        <h2>Miners Are Rational</h2>
+                        <p>Miners (bus drivers) get paid:<br>
+                        • <span class="highlight">Block reward</span> (new BTC created)<br>
+                        • <span class="highlight">All tips</span> from riders they let on</p>
+                        <p style="margin-top: 15px;">So they fill buses with highest tippers first!</p>
+                        <div class="seats-grid">
+                            <div class="seat taken"></div>
+                            <div class="seat taken"></div>
+                            <div class="seat taken"></div>
+                            <div class="seat taken"></div>
+                            <div class="seat taken"></div>
+                            <div class="seat taken"></div>
+                            <div class="seat"></div>
+                            <div class="seat"></div>
+                            <div class="seat"></div>
+                            <div class="seat"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scene 3: The Mempool (Surge Pricing) -->
+            <div class="scene" id="scene-3">
+                <div class="bus-stop">
+                    <div class="mempool-queue">
+                        <div class="queue-item" style="background: #d0021b; opacity: 1;"></div>
+                        <div class="queue-item" style="background: #F7931A; opacity: 0.9;"></div>
+                        <div class="queue-item" style="background: #F7931A; opacity: 0.8;"></div>
+                        <div class="queue-item"></div>
+                        <div class="queue-item"></div>
+                        <div class="queue-item"></div>
+                        <div class="queue-item"></div>
+                        <div class="queue-item"></div>
+                    </div>
+                    <div class="info-box">
+                        <h2>The Digital Waiting Line (Mempool)</h2>
+                        <p>All unconfirmed transactions wait here.</p>
+                        <p>When demand is heavy, the line grows.<br>
+                        Typical feerates rise—like <span class="highlight">surge pricing</span> during rush hour!</p>
+                        <div class="chart-container">
+                            <div class="bar" style="height: 40px;"></div>
+                            <div class="bar" style="height: 60px;"></div>
+                            <div class="bar" style="height: 100px;"></div>
+                            <div class="bar" style="height: 140px; background: #d0021b;"></div>
+                            <div class="bar" style="height: 80px;"></div>
+                            <div class="bar" style="height: 50px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scene 4: Clearing Price & Overpayment -->
+            <div class="scene" id="scene-4">
+                <div class="info-box">
+                    <h2>The Clearing Price & Overpayment</h2>
+                    <p>Each block has a <span class="highlight">clearing price</span>:<br>
+                    The lowest feerate that actually made it onto the bus.</p>
+                    
+                    <div class="comparison-visual">
+                        <div class="price-box normal">
+                            <strong>Smart Rider</strong><br>
+                            Paid: 25 sats/vB<br>
+                            Clearing: 20 sats/vB<br>
+                            <em>Just enough!</em>
+                        </div>
+                        <div class="price-box overpay">
+                            <strong>Panicked Rider</strong><br>
+                            Paid: 100 sats/vB<br>
+                            Clearing: 20 sats/vB<br>
+                            <em>5× overpayment!</em>
+                        </div>
+                    </div>
+                    
+                    <p>If you paid way above the clearing price,<br>
+                    you <span class="highlight">overpaid</span>—jumped the line unnecessarily!</p>
+                    
+                    <div class="seats-grid">
+                        <div class="seat taken"></div>
+                        <div class="seat taken"></div>
+                        <div class="seat taken"></div>
+                        <div class="seat overpaid"></div>
+                        <div class="seat overpaid"></div>
+                        <div class="seat taken"></div>
+                        <div class="seat taken"></div>
+                        <div class="seat"></div>
+                        <div class="seat"></div>
+                        <div class="seat"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scene 5: Timing Irregularity -->
+            <div class="scene" id="scene-5">
+                <div class="info-box">
+                    <h2>Buses Don't Run on Schedule</h2>
+                    <p>Blocks arrive roughly every 10 minutes, but...</p>
+                    
+                    <div class="variability-visual">
+                        <div class="block-time">5 min</div>
+                        <span class="arrow">→</span>
+                        <div class="block-time">15 min</div>
+                        <span class="arrow">→</span>
+                        <div class="block-time">8 min</div>
+                        <span class="arrow">→</span>
+                        <div class="block-time">12 min</div>
+                    </div>
+                    
+                    <p>This <span class="highlight">variance</span> affects how the mempool evolves<br>
+                    and how people bid for space.</p>
+                    
+                    <p style="margin-top: 20px;">When buses bunch up or delay,<br>
+                    fee dynamics change dramatically!</p>
+                </div>
+            </div>
+
+            <!-- Scene 6: The Market Dynamics -->
+            <div class="scene" id="scene-6">
+                <div class="info-box">
+                    <h2>Blockspace as a Tiny Market</h2>
+                    
+                    <div class="pattern-grid">
+                        <div class="pattern-item">
+                            <strong>Supply:</strong><br>
+                            Seats per bus (block capacity)<br>
+                            How often buses arrive
+                        </div>
+                        <div class="pattern-item">
+                            <strong>Demand:</strong><br>
+                            How many want on now<br>
+                            How urgently (high bids)
+                        </div>
+                        <div class="pattern-item">
+                            <strong>Price Discovery:</strong><br>
+                            Feerate needed to clear<br>
+                            Spread between cheap/expensive
+                        </div>
+                        <div class="pattern-item">
+                            <strong>Inefficiency:</strong><br>
+                            Some always overpay<br>
+                            Patterns emerge in when/why
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 20px;">When demand spikes, both <span class="highlight">prices</span> and <span class="highlight">overpayment</span> rise.<br>
+                    The question: <strong>Are these patterns predictable?</strong></p>
+                </div>
+            </div>
+
+            <!-- Scene 7: Our Research Findings -->
+            <div class="scene" id="scene-7">
+                <div class="info-box">
+                    <h2>What We Actually Found</h2>
+                    
+                    <p style="font-size: 18px; margin-bottom: 20px;">We tested two hypotheses:</p>
+                    
+                    <div style="text-align: left; margin: 20px auto; max-width: 500px;">
+                        <p>❌ <strong>Price patterns by weekday?</strong><br>
+                        <span style="color: #666; font-size: 14px;">No reliable Monday effect or weekend patterns in returns</span></p>
+                        
+                        <p style="margin-top: 20px;">✅ <strong>Fee overpayment patterns?</strong><br>
+                        <span style="color: #666; font-size: 14px;">YES! Clear patterns emerge:</span></p>
+                    </div>
+                    
+                    <div class="pattern-grid">
+                        <div class="pattern-item">
+                            📅 <strong>Weekends</strong><br>
+                            Highest overpayment rates
+                        </div>
+                        <div class="pattern-item">
+                            ⏰ <strong>Mornings (UTC)</strong><br>
+                            Peak inefficiency hours
+                        </div>
+                        <div class="pattern-item">
+                            📊 <strong>High congestion</strong><br>
+                            More panic, more waste
+                        </div>
+                        <div class="pattern-item">
+                            💰 <strong>Millions wasted</strong><br>
+                            Real economic impact
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 20px;">Unlike stock patterns, these are <span class="highlight">persistent and actionable</span>!</p>
+                </div>
+            </div>
+
+            <!-- Scene 8: What This Means -->
+            <div class="scene" id="scene-8">
+                <div class="info-box">
+                    <h2>Can Today Predict Tomorrow?</h2>
+                    
+                    <p style="font-size: 18px; margin-bottom: 20px;">What market mechanics might carry predictive info:</p>
+                    
+                    <div style="text-align: left; margin: 20px auto; max-width: 550px; line-height: 2;">
+                        <p><strong>Today's signals:</strong><br>
+                        • Fee level & dispersion (median, IQR)<br>
+                        • Overpayment rates (% paying >2× clearing)<br>
+                        • Timing variance (block irregularity)<br>
+                        • Congestion (mempool pressure)</p>
+                        
+                        <p style="margin-top: 20px;"><strong>Tomorrow's outcomes to predict:</strong><br>
+                        • <span class="highlight">Volatility</span> (how big the move)<br>
+                        • <span class="highlight">Fee levels</span> (higher or lower)<br>
+                        • Return direction (harder)</p>
+                    </div>
+                    
+                    <div style="background: #f9f9f9; padding: 15px; border-radius: 10px; margin-top: 20px;">
+                        <p><strong>The Big Idea:</strong><br>
+                        If congestion/overpayment/timing today consistently<br>
+                        links to tomorrow's volatility, that's a <span class="highlight">useful economic signal</span>.<br>
+                        If not, Bitcoin's "plumbing" is efficient—also valuable!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scene 9: Smart Rider Tips -->
+            <div class="scene" id="scene-9">
+                <div class="info-box">
+                    <h2>💡 Smart Passenger Tips</h2>
+                    <div style="text-align: left; margin: 20px auto; max-width: 500px; line-height: 2.2;">
+                        <p>📅 <strong>Avoid weekends</strong> - Buses are most crowded</p>
+                        <p>⏰ <strong>Skip morning rush (UTC)</strong> - Highest overpayment times</p>
+                        <p>📊 <strong>Check the mempool</strong> - See how long the line is</p>
+                        <p>💰 <strong>Use dynamic fees</strong> - Don't overpay with fixed amounts</p>
+                        <p>⏳ <strong>If you can wait, wait</strong> - Save 50%+ on fees</p>
+                    </div>
+                    
+                    <div style="background: #f9f9f9; padding: 15px; border-radius: 10px; margin-top: 25px;">
+                        <p style="font-size: 16px; margin-bottom: 10px;"><strong>Remember:</strong></p>
+                        <p>Unlike stock market "patterns" that disappear when you try to trade them,<br>
+                        these fee patterns are <span class="highlight">real, persistent, and actionable</span>.</p>
+                        <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                        You can't predict Bitcoin's price by the day of week,<br>
+                        but you CAN save money by timing your transactions smartly!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="prev-btn" onclick="changeScene(-1)">← Previous</button>
+            <div class="scene-indicator" id="scene-dots"></div>
+            <button class="btn" id="next-btn" onclick="changeScene(1)">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentScene = 0;
+        const totalScenes = 10;
+
+        // Initialize scene dots
+        function initializeDots() {
+            const dotsContainer = document.getElementById('scene-dots');
+            for (let i = 0; i < totalScenes; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot' + (i === 0 ? ' active' : '');
+                dot.onclick = () => goToScene(i);
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        function goToScene(sceneIndex) {
+            // Hide all scenes
+            document.querySelectorAll('.scene').forEach(scene => {
+                scene.classList.remove('active');
+            });
+
+            // Show target scene
+            document.getElementById(`scene-${sceneIndex}`).classList.add('active');
+
+            // Update dots
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === sceneIndex);
+            });
+
+            // Update buttons
+            document.getElementById('prev-btn').disabled = sceneIndex === 0;
+            document.getElementById('next-btn').disabled = sceneIndex === totalScenes - 1;
+
+            currentScene = sceneIndex;
+
+            // Trigger animations for specific scenes
+            if (sceneIndex === 2) {
+                setTimeout(() => {
+                    const bus = document.querySelector('#scene-2 .bus');
+                    if (bus) bus.classList.add('arriving');
+                }, 100);
+            }
+        }
+
+        function changeScene(direction) {
+            const newScene = currentScene + direction;
+            if (newScene >= 0 && newScene < totalScenes) {
+                goToScene(newScene);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeScene(-1);
+            if (e.key === 'ArrowRight') changeScene(1);
+        });
+
+        // Initialize
+        initializeDots();
+        goToScene(0);
+    </script>
+</body>
+</html>

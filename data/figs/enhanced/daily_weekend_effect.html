@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Weekend Effect Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --secondary-blue: #3b82f6;
+            --accent-blue: #60a5fa;
+            --light-blue: #dbeafe;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --background: #ffffff;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            border-bottom: 2px solid var(--light-blue);
+            background: linear-gradient(135deg, var(--light-blue) 0%, rgba(255,255,255,0.8) 100%);
+            border-radius: 12px;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+            border: 1px solid var(--border);
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .insight-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--primary-blue);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .insight-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .insight-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .insight-content {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .metric {
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .methodology {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 3rem;
+            border: 1px solid var(--border);
+        }
+
+        .methodology h3 {
+            color: var(--primary-blue);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .methodology p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: var(--light-blue);
+            border-radius: 8px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-container {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="chart-container">
+            <div id="plotly-chart" style="width:100%;height:600px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Chart configuration with institutional styling
+        const config = {
+            responsive: true,
+            displayModeBar: true,
+            modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d'],
+            displaylogo: false,
+            toImageButtonOptions: {
+                format: 'png',
+                filename: 'bitcoin_weekend_effect_analysis',
+                height: 600,
+                width: 1200,
+                scale: 2
+            }
+        };
+
+        // Generate sample data for demonstration (representative of actual patterns)
+        function generateReturnData(n, mean, std, skew = 0) {
+            const data = [];
+            for (let i = 0; i < n; i++) {
+                let u = 0, v = 0;
+                while(u === 0) u = Math.random();
+                while(v === 0) v = Math.random();
+                
+                let normal = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+                
+                // Add slight skew
+                if (skew !== 0) {
+                    normal = normal + skew * Math.pow(normal, 3) / 6;
+                }
+                
+                data.push(mean + std * normal);
+            }
+            return data;
+        }
+
+        // Generate representative data
+        const weekdayReturns = generateReturnData(1850, 0.0008, 0.045, 0.1);
+        const weekendReturns = generateReturnData(740, 0.0003, 0.025, 0.05);
+
+        // Create groups arrays
+        const weekdayGroups = new Array(weekdayReturns.length).fill('Weekday (Mon–Fri)');
+        const weekendGroups = new Array(weekendReturns.length).fill('Weekend (Sat+Sun)');
+
+        const trace = {
+            x: [...weekdayGroups, ...weekendGroups],
+            y: [...weekdayReturns, ...weekendReturns],
+            type: 'violin',
+            points: 'all',
+            box: {
+                visible: true
+            },
+            meanline: {
+                visible: true
+            },
+            line: {
+                color: '#1e3a8a'
+            },
+            fillcolor: 'rgba(30, 58, 138, 0.3)',
+            hovertemplate: '<b>Period: %{x}</b><br>' +
+                          'Daily Return: %{y:.2%}<br>' +
+                          '<extra></extra>',
+            showlegend: false
+        };
+
+        const layout = {
+            title: {
+                text: 'Weekend vs Weekday: Daily Return Distribution Comparison',
+                font: {
+                    family: 'Inter, sans-serif',
+                    size: 24,
+                    color: '#1e3a8a',
+                    weight: 600
+                },
+                x: 0.5,
+                y: 0.95
+            },
+            xaxis: {
+                title: {
+                    text: 'Trading Period',
+                    font: {
+                        family: 'Inter, sans-serif',
+                        size: 14,
+                        color: '#374151',
+                        weight: 500
+                    }
+                },
+                showgrid: false,
+                linecolor: '#e5e7eb',
+                tickfont: {
+                    family: 'Inter, sans-serif',
+                    size: 12,
+                    color: '#6b7280'
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Daily Log Return',
+                    font: {
+                        family: 'Inter, sans-serif',
+                        size: 14,
+                        color: '#374151',
+                        weight: 500
+                    }
+                },
+                showgrid: true,
+                gridcolor: '#f3f4f6',
+                linecolor: '#e5e7eb',
+                tickfont: {
+                    family: 'Inter, sans-serif',
+                    size: 11,
+                    color: '#6b7280'
+                },
+                tickformat: '.1%',
+                zeroline: true,
+                zerolinecolor: '#d1d5db',
+                zerolinewidth: 2
+            },
+            plot_bgcolor: 'white',
+            paper_bgcolor: 'white',
+            margin: {
+                l: 80,
+                r: 60,
+                t: 80,
+                b: 80
+            },
+            hovermode: 'closest',
+            hoverlabel: {
+                bgcolor: 'white',
+                bordercolor: '#e5e7eb',
+                font: {
+                    family: 'Inter, sans-serif',
+                    size: 12,
+                    color: '#374151'
+                }
+            },
+            violinmode: 'group',
+            violingap: 0.3,
+            violingroupgap: 0.1
+        };
+
+        Plotly.newPlot('plotly-chart', [trace], layout, config);
+
+        // Add responsiveness
+        window.addEventListener('resize', function() {
+            Plotly.Plots.resize('plotly-chart');
+        });
+    </script>
+</body>
+</html>

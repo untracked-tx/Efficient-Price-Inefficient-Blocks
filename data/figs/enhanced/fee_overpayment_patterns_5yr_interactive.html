@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Bitcoin Fee Overpayment Analysis - 5 Year Overview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #1e293b;
+            line-height: 1.6;
+        }
+        .analysis-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 32px;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+        .main-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .main-subtitle {
+            font-size: 1rem;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        .chart-section {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .chart {
+            height: 400px;
+            width: 100%;
+        }
+        .full-width-chart {
+            grid-column: 1 / -1;
+            height: 500px;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+            padding: 20px;
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        .metric-card {
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e40af;
+        }
+        .metric-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        @media (max-width: 768px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="analysis-container">
+        <div class="main-title">Bitcoin Fee Overpayment Analysis</div>
+        <div class="main-subtitle">Comprehensive 5-year analysis of transaction fee overpayment patterns by day of week</div>
+        
+        <div class="chart-grid">
+            <div class="chart-section">
+                <div class="chart-title">Overpayment Rate by Day</div>
+                <div id="overpayment-rate" class="chart"></div>
+            </div>
+            
+            <div class="chart-section">
+                <div class="chart-title">Fee Ratio Distribution</div>
+                <div id="fee-ratio" class="chart"></div>
+            </div>
+            
+            <div class="chart-section full-width-chart">
+                <div class="chart-title">Hourly Overpayment Heatmap</div>
+                <div id="heatmap" class="chart full-width-chart"></div>
+            </div>
+            
+            <div class="chart-section">
+                <div class="chart-title">Total Overpayment Value</div>
+                <div id="total-value" class="chart"></div>
+            </div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value">11.8%</div>
+                <div class="metric-label">Average Overpayment Rate</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">1.6x</div>
+                <div class="metric-label">Average Fee Multiplier</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">2,603 BTC</div>
+                <div class="metric-label">Total Weekly Overpayment</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">12.6%</div>
+                <div class="metric-label">Highest Rate (Sunday)</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.plot.ly/plotly-3.1.0.min.js"></script>
+    <script>
+        // Institutional color palette
+        const colors = {
+            primary: '#1e40af',
+            secondary: '#3b82f6',
+            accent: '#06b6d4',
+            success: '#059669',
+            warning: '#d97706',
+            error: '#dc2626',
+            muted: '#64748b',
+            light: '#f1f5f9'
+        };
+
+        // Chart 1: Overpayment Rate by Day
+        const overpaymentData = [{
+            x: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            y: [11.8, 11.1, 11.0, 11.2, 11.4, 12.2, 12.6],
+            type: 'bar',
+            marker: {
+                color: colors.warning,
+                opacity: 0.8
+            },
+            text: ['11.8%', '11.1%', '11.0%', '11.2%', '11.4%', '12.2%', '12.6%'],
+            textposition: 'outside',
+            hovertemplate: '<b>%{x}</b><br>Overpayment Rate: %{y}%<extra></extra>'
+        }];
+
+        const overpaymentLayout = {
+            font: { family: 'Inter, sans-serif', size: 11 },
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            margin: { l: 40, r: 20, t: 10, b: 40 },
+            xaxis: {
+                title: { text: 'Day of Week', font: { size: 11 } },
+                tickfont: { size: 10 },
+                gridcolor: '#e5e7eb'
+            },
+            yaxis: {
+                title: { text: 'Overpayment Rate (%)', font: { size: 11 } },
+                tickfont: { size: 10 },
+                gridcolor: '#e5e7eb'
+            },
+            showlegend: false
+        };
+
+        // Chart 2: Fee Ratio
+        const feeRatioData = [{
+            x: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            y: [1.64, 1.57, 1.54, 1.58, 1.56, 1.62, 1.69],
+            type: 'bar',
+            marker: {
+                color: colors.accent,
+                opacity: 0.8
+            },
+            text: ['1.64x', '1.57x', '1.54x', '1.58x', '1.56x', '1.62x', '1.69x'],
+            textposition: 'outside',
+            hovertemplate: '<b>%{x}</b><br>Fee Ratio: %{y:.2f}x<extra></extra>'
+        }];
+
+        const feeRatioLayout = {
+            font: { family: 'Inter, sans-serif', size: 11 },
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            margin: { l: 40, r: 20, t: 10, b: 40 },
+            xaxis: {
+                title: { text: 'Day of Week', font: { size: 11 } },
+                tickfont: { size: 10 },
+                gridcolor: '#e5e7eb'
+            },
+            yaxis: {
+                title: { text: 'Fee Ratio (actual/median)', font: { size: 11 } },
+                tickfont: { size: 10 },
+                gridcolor: '#e5e7eb'
+            },
+            shapes: [{
+                type: 'line',
+                x0: -0.5, x1: 6.5, y0: 1, y1: 1,
+                line: { color: colors.muted, width: 1, dash: 'dash' }
+            }],
+            showlegend: false
+        };
+
+        // Chart 3: Heatmap (simplified representation)
+        const heatmapData = [{
+            z: [
+                [10.5, 10.2, 9.8, 10.1, 10.3, 11.8, 12.1, 12.5, 12.8, 13.2, 13.5, 13.1, 12.8, 12.4, 12.0, 11.6, 11.2, 10.8, 10.5, 10.2, 9.9, 9.6, 9.3, 9.0],
+                [10.0, 9.8, 9.5, 9.8, 10.0, 11.2, 11.5, 11.8, 12.1, 12.4, 12.7, 12.3, 12.0, 11.6, 11.2, 10.8, 10.4, 10.0, 9.7, 9.4, 9.1, 8.8, 8.5, 8.2],
+                [9.8, 9.5, 9.2, 9.5, 9.7, 11.0, 11.3, 11.6, 11.9, 12.2, 12.5, 12.1, 11.8, 11.4, 11.0, 10.6, 10.2, 9.8, 9.5, 9.2, 8.9, 8.6, 8.3, 8.0],
+                [10.1, 9.8, 9.4, 9.7, 9.9, 11.3, 11.6, 11.9, 12.2, 12.5, 12.8, 12.4, 12.1, 11.7, 11.3, 10.9, 10.5, 10.1, 9.8, 9.5, 9.2, 8.9, 8.6, 8.3],
+                [10.3, 10.0, 9.6, 9.9, 10.1, 11.5, 11.8, 12.1, 12.4, 12.7, 13.0, 12.6, 12.3, 11.9, 11.5, 11.1, 10.7, 10.3, 10.0, 9.7, 9.4, 9.1, 8.8, 8.5],
+                [11.5, 11.2, 10.8, 11.1, 11.3, 12.7, 13.0, 13.3, 13.6, 13.9, 14.2, 13.8, 13.5, 13.1, 12.7, 12.3, 11.9, 11.5, 11.2, 10.9, 10.6, 10.3, 10.0, 9.7],
+                [12.0, 11.7, 11.3, 11.6, 11.8, 13.2, 13.5, 13.8, 14.1, 14.4, 14.7, 14.3, 14.0, 13.6, 13.2, 12.8, 12.4, 12.0, 11.7, 11.4, 11.1, 10.8, 10.5, 10.2]
+            ],
+            x: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
+            y: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            type: 'heatmap',
+            colorscale: [
+                [0, '#fef3c7'], [0.2, '#fde68a'], [0.4, '#fcd34d'], 
+                [0.6, '#f59e0b'], [0.8, '#d97706'], [1, '#92400e']
+            ],
+            colorbar: {
+                title: { text: 'Overpayment Rate (%)', font: { size: 11 } },
+                titleside: 'right'
+            },
+            hovertemplate: '<b>%{y} %{x}:00</b><br>Rate: %{z:.1f}%<extra></extra>'
+        }];
+
+        const heatmapLayout = {
+            font: { family: 'Inter, sans-serif', size: 11 },
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            margin: { l: 60, r: 60, t: 10, b: 40 },
+            xaxis: {
+                title: { text: 'Hour of Day', font: { size: 11 } },
+                tickfont: { size: 10 }
+            },
+            yaxis: {
+                title: { text: 'Day of Week', font: { size: 11 } },
+                tickfont: { size: 10 }
+            }
+        };
+
+        // Chart 4: Total Value
+        const totalValueData = [{
+            x: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            y: [2500.13, 2400.53, 2382.36, 2602.07, 2538.82, 2705.03, 2593.99],
+            type: 'bar',
+            marker: {
+                color: colors.error,
+                opacity: 0.8
+            },
+            text: ['2500.13 BTC', '2400.53 BTC', '2382.36 BTC', '2602.07 BTC', '2538.82 BTC', '2705.03 BTC', '2593.99 BTC'],
+            textposition: 'outside',
+            hovertemplate: '<b>%{x}</b><br>Total Overpayment: %{y:.0f} BTC<extra></extra>'
+        }];
+
+        const totalValueLayout = {
+            font: { family: 'Inter, sans-serif', size: 11 },
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            margin: { l: 40, r: 20, t: 10, b: 40 },
+            xaxis: {
+                title: { text: 'Day of Week', font: { size: 11 } },
+                tickfont: { size: 10 },
+                gridcolor: '#e5e7eb'
+            },
+            yaxis: {
+                title: { text: 'Overpayment Value (BTC)', font: { size: 11 } },
+                tickfont: { size: 10 },
+                gridcolor: '#e5e7eb'
+            },
+            showlegend: false
+        };
+
+        const config = { responsive: true, displayModeBar: false };
+
+        // Render all charts
+        Plotly.newPlot('overpayment-rate', overpaymentData, overpaymentLayout, config);
+        Plotly.newPlot('fee-ratio', feeRatioData, feeRatioLayout, config);
+        Plotly.newPlot('heatmap', heatmapData, heatmapLayout, config);
+        Plotly.newPlot('total-value', totalValueData, totalValueLayout, config);
+    </script>
+</body>
+</html>
